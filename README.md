@@ -1,1 +1,0 @@
-# ZTP - Zaawansowane techniki programowania
