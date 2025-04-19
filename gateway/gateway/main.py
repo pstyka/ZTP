@@ -1,4 +1,5 @@
 import gateway.core.logging_setup
+import logging
 import datetime
 import uvicorn
 from gateway.core.config import settings
@@ -6,7 +7,9 @@ from fastapi import FastAPI
 from gateway.utils.redis import redis_client
 import requests
 from gateway.middleware.request_id import RequestIDMiddleware
+from gateway.proxy.router import router as proxy_router
 
+logger = logging.getLogger("gateway.main")
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -19,13 +22,15 @@ app = FastAPI(
 app.add_middleware(RequestIDMiddleware)
 
 
+app.include_router(proxy_router, tags=["proxy"])
+
 @app.get("/health", tags=["health"])
 async def health_check():
     service_health = {}
 
     for service, url in settings.SERVICES.items():
         try:
-            response = requests.get(url)
+            response = requests.get(f"{url}/health")
             service_health[service] = "up" if response.status_code == 200 else "down"
         except requests.RequestException:
             service_health[service] = "down"

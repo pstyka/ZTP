@@ -1,15 +1,28 @@
 services:
-  fastapi:
+  gateway:
     build:
-      context: .
+      context: ./gateway
       dockerfile: Dockerfile
-    container_name: fastapi-app
+    container_name: gateway
     ports:
       - "8000:8000"
     volumes:
-      - ./gateway:/app/gateway
+      - ./gateway/gateway:/app/gateway
     depends_on:
       - redis
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  users:
+    build:
+      context: ./users
+      dockerfile: Dockerfile
+    container_name: users
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./users/users:/app/users
     restart: unless-stopped
     networks:
       - app-network
