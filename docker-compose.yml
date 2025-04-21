@@ -24,6 +24,8 @@ services:
     volumes:
       - ./users/users:/app/users
     restart: unless-stopped
+    depends_on:
+      - postgres
     networks:
       - app-network
 
@@ -39,8 +41,25 @@ services:
     networks:
       - app-network
 
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=users
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - app-network
+
 volumes:
   redis_data:
+    driver: local
+  postgres_data:
     driver: local
 
 networks:

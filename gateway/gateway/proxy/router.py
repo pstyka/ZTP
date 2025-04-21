@@ -1,16 +1,15 @@
 import logging
 
-from fastapi import APIRouter, Depends, Request, HTTPException, status
-
+from fastapi import APIRouter, Depends, Request, HTTPException, status, Body
 from gateway.auth.jwt import verify_token, has_role, TokenData
 from gateway.proxy.services import proxy_request, ServiceRequest
 
 logger = logging.getLogger("api_gateway.proxy.router")
 
-router = APIRouter()
+router = APIRouter(prefix="/users", tags=["users"])
 
 
-@router.get("/api/users/me", tags=["users"])
+@router.get("/me")
 async def get_current_user(request: Request, token_data: TokenData = Depends(verify_token)):
     service_request = ServiceRequest(
         service="users",
@@ -18,29 +17,29 @@ async def get_current_user(request: Request, token_data: TokenData = Depends(ver
         method="GET",
         headers={
             "X-User": str(token_data.username),
-            "X-User-Roles": ",".join(token_data.roles)
+            "X-User-Roles": token_data.role
         }
     )
     response = await proxy_request(request, service_request)
     return response.body
 
 
-@router.get("/api/admin/users", tags=["admin"])
-async def get_all_users(request: Request, token_data: TokenData = Depends(has_role(["admin"]))):
-    service_request = ServiceRequest(
-        service="users",
-        path="/users",
-        method="GET",
-        headers={
-            "X-User": str(token_data.username),
-            "X-User-Roles": ",".join(token_data.roles)
-        }
-    )
-    response = await proxy_request(request, service_request)
-    return response.body
+# @router.get("/api/admin/users", tags=["admin"])
+# async def get_all_users(request: Request, token_data: TokenData = Depends(has_role(["admin"]))):
+#     service_request = ServiceRequest(
+#         service="users",
+#         path="/users",
+#         method="GET",
+#         headers={
+#             "X-User": str(token_data.username),
+#             "X-User-Roles": ",".join(token_data.roles)
+#         }
+#     )
+#     response = await proxy_request(request, service_request)
+#     return response.body
 
 
-@router.api_route("/api/users/{path:path}", methods=["GET", "POST", "PUT", "DELETE"], tags=["users"])
+@router.api_route("/{path:path}", methods=["GET", "POST", "PUT", "DELETE"])
 async def users_proxy(path: str, request: Request, token_data: TokenData = Depends(verify_token)):
     method = request.method
 
@@ -61,7 +60,7 @@ async def users_proxy(path: str, request: Request, token_data: TokenData = Depen
         method=method,
         headers={
             "X-User": str(token_data.username),
-            "X-User-Roles": ",".join(token_data.roles)
+            "X-User-Roles": token_data.role
         },
         body=body
     )

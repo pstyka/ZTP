@@ -1,9 +1,4 @@
-# app/auth/jwt.py w API Gateway
-"""
-JWT authentication utilities for API Gateway.
-"""
 import logging
-from datetime import datetime, timedelta
 
 from jose import JWTError, jwt
 from fastapi import Depends, HTTPException, status
@@ -17,9 +12,9 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
 
 
 class TokenData:
-    def __init__(self, username: str | None = None, roles: list[str] | None = None):
+    def __init__(self, username: str | None = None, role: str | None = None):
         self.username = username
-        self.roles = roles or []
+        self.role = role
 
 
 async def verify_token(token: str = Depends(oauth2_scheme)) -> TokenData:
@@ -37,18 +32,17 @@ async def verify_token(token: str = Depends(oauth2_scheme)) -> TokenData:
             logger.warning("Token missing username")
             raise credentials_exception
 
-        roles = payload.get("roles", [])
-        return TokenData(username=username, roles=roles)
+        role = payload.get("role", "")
+        return TokenData(username=username, role=role)
     except JWTError as e:
         logger.warning(f"JWT error: {str(e)}")
         raise credentials_exception
 
 
-def has_role(roles: list[str]):
+def has_role(role: str):
     async def role_checker(token_data: TokenData = Depends(verify_token)) -> TokenData:
-        for role in roles:
-            if role in token_data.roles:
-                return token_data
+        if role == token_data.role:
+            return token_data
 
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
