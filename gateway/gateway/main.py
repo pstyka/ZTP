@@ -8,6 +8,7 @@ from gateway.utils.redis import redis_client
 import requests
 from gateway.middleware.request_id import RequestIDMiddleware
 from gateway.proxy.router import router as proxy_router
+from gateway.auth.router import router as auth_router
 
 logger = logging.getLogger("gateway.main")
 
@@ -21,8 +22,6 @@ app = FastAPI(
 
 app.add_middleware(RequestIDMiddleware)
 
-
-app.include_router(proxy_router, tags=["proxy"])
 
 @app.get("/health", tags=["health"])
 async def health_check():
@@ -52,6 +51,10 @@ async def get_root():
         "docs": "/docs",
         "health": "/health",
     }
+
+
+app.include_router(proxy_router, prefix=settings.API_PREFIX)
+app.include_router(auth_router, prefix=settings.API_PREFIX)
 
 
 if __name__ == "__main__":

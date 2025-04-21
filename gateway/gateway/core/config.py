@@ -5,6 +5,7 @@ from functools import lru_cache
 
 class Settings(BaseSettings):
     APP_NAME: str = "API Gateway"
+    API_PREFIX: str = "/api/v1"
 
     # REDIS
     REDIS_HOST: str = "redis"
@@ -15,7 +16,7 @@ class Settings(BaseSettings):
     # JWT
     SECRET_KEY: str = "secret-key"
     ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = "30"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
 
     # Circuit breaker
     CIRCUIT_BREAKER_FAILURE_THRESHOLD: int =  5
@@ -31,7 +32,7 @@ class Settings(BaseSettings):
     def SERVICES(self) -> dict[str, str]:
         return {
             "frontend": self.FRONTEND_SERVICE_URL,
-            "user-service": self.USER_SERVICE_URL,
+            "users": self.USER_SERVICE_URL,
             "rest-api": self.REST_API_SERVICE_URL,
         }
 
