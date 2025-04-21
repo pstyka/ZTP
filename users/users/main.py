@@ -24,7 +24,7 @@ async def get_root():
         "health": "/health",
     }
 
-app.include_router(user_router, prefix="/users", tags=["users"])
+app.include_router(user_router)
 
 
 if __name__ == "__main__":

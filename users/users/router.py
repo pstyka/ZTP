@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status, HTTPException, Body
+from fastapi import APIRouter, status, HTTPException, Body, Request
 from users.database import Database
 from users.schemas import UserCreate
 from users.core.config import settings
@@ -6,7 +6,8 @@ from users.core.auth import create_access_token
 from datetime import timedelta
 from users.repository.user import user as user_repository
 
-router = APIRouter()
+
+router = APIRouter(prefix="/users", tags=["users"])
 
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)
@@ -46,3 +47,19 @@ async def login_for_access_token(
     )
 
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+@router.get("/me", status_code=status.HTTP_200_OK)
+async def read_users_me(
+    request: Request,
+    db: Database,
+):
+    id = request.headers.get("X-User-ID")
+    user = user_repository.get_by_id(db, id)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found",
+        )
+
+    return user

@@ -19,8 +19,6 @@ services:
       context: ./users
       dockerfile: Dockerfile
     container_name: users
-    ports:
-      - "8080:8080"
     volumes:
       - ./users/users:/app/users
     restart: unless-stopped

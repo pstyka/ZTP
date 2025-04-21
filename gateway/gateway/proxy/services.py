@@ -132,7 +132,7 @@ async def proxy_request(
     if hasattr(request.state, "user"):
         user = request.state.user
         headers["X-User"] = user.username
-        headers["X-User-Roles"] = ",".join(user.roles)
+        headers["X-User-Role"] = user.role
 
     try:
         response = await call_service(
