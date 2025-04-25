@@ -54,6 +54,24 @@ services:
     networks:
       - app-network
 
+  restapi:
+    build:
+      context: ./REST_API
+      dockerfile: Dockerfile
+    container_name: restapi
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/users
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: password
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+    restart: unless-stopped
+
+
 volumes:
   redis_data:
     driver: local
