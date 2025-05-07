@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { materialImports } from '../../../core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 @Component({
@@ -20,8 +20,8 @@ export class LoginComponent implements OnInit{
 
   initForm() {
     this.form = this.fb.group({
-      username: [''],
-      password: [''],
+      username: ['', Validators.required],
+      password: ['', Validators.required],
     });
   }
 
@@ -35,5 +35,9 @@ export class LoginComponent implements OnInit{
 
   forgotPassword() {
     alert('Link do resetu hasła został wysłany!');
+  }
+
+  goToHome() {
+    this.router.navigate(['/']);
   }
 }

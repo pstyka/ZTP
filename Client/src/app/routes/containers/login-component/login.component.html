@@ -1,5 +1,9 @@
 <div class="login-wrapper">
     <mat-card class="login-card">
+      <div class="logo-container">
+        <img src="assets/logo.png" alt="Logo" class="logo" (click)="goToHome()"/>
+      </div>  
+
       <h2>Login</h2>
   
       <form [formGroup]="form" (ngSubmit)="login()" autocomplete="off">
