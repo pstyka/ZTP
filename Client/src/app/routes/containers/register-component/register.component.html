@@ -1,0 +1,42 @@
+<div class="register-wrapper">
+    <mat-card class="register-card">
+      <div class="logo-container">
+        <img src="assets/logo.png" alt="Logo" class="logo" (click)="goToHome()"/>
+      </div>  
+
+      <h2>Register</h2>
+  
+      <form [formGroup]="form" (ngSubmit)="register()" autocomplete="off">
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" type="email" autocomplete="off" />
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Password</mat-label>
+          <input matInput formControlName="password_hash" type="password" autocomplete="new-password" />
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>First name</mat-label>
+          <input matInput formControlName="first_name" autocomplete="off" />
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Last name</mat-label>
+          <input matInput formControlName="last_name" autocomplete="off" />
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Phone</mat-label>
+          <input matInput formControlName="phone" type="tel" autocomplete="off" />
+        </mat-form-field>
+  
+        <div class="buttons">
+          <button mat-raised-button color="primary" type="submit">Register</button>
+          <button mat-button type="button" (click)="goToLogin()">Back to Login</button>
+        </div>
+      </form>
+    </mat-card>
+  </div>
+  

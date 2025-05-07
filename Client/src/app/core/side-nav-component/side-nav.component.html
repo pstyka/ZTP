@@ -1,0 +1,33 @@
+<mat-sidenav-container class="sidenav-container">
+    <mat-sidenav
+      mode="side"
+      [opened]="isOpen"
+      class="sidenav"
+    >
+      <button mat-icon-button (click)="toggleSidenav()" class="close-button">
+        <mat-icon>close</mat-icon>
+      </button>
+  
+      <mat-nav-list class="nav-list">
+        <a mat-list-item (click)="goToHome()">Home</a>
+        <a mat-list-item routerLink="/about">About</a>
+        <a mat-list-item routerLink="/contact">Contact</a>
+        <a mat-list-item (click)="goToLogin()">Login</a>
+      </mat-nav-list>
+    </mat-sidenav>
+  
+    <mat-sidenav-content class="sidenav-content">
+      <button
+        *ngIf="!isOpen"
+        mat-icon-button
+        (click)="toggleSidenav()"
+        class="open-button"
+        aria-label="Open sidenav"
+      >
+        <mat-icon>menu</mat-icon>
+      </button>
+  
+      <ng-content></ng-content>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+  
