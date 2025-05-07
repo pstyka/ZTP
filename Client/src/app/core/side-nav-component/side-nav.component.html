@@ -9,10 +9,10 @@
       </button>
   
       <mat-nav-list class="nav-list">
-        <a mat-list-item routerLink="/">Home</a>
+        <a mat-list-item (click)="goToHome()">Home</a>
         <a mat-list-item routerLink="/about">About</a>
         <a mat-list-item routerLink="/contact">Contact</a>
-        <a mat-list-item class="login-item" routerLink="/login">Login</a>
+        <a mat-list-item (click)="goToLogin()">Login</a>
       </mat-nav-list>
     </mat-sidenav>
   

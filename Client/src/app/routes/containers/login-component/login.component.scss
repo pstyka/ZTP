@@ -1,0 +1,32 @@
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 24px;
+  }
+  
+  .full-width {
+    width: 100%;
+  }
+  
+  .forgot-password {
+    text-align: right;
+    color: #3f51b5;
+    cursor: pointer;
+    margin-bottom: 16px;
+    font-size: 0.9em;
+  }
+  
+  .buttons {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus {
+    box-shadow: 0 0 0px 1000px white inset !important;
+    -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+    -webkit-text-fill-color: #000 !important;
+    transition: background-color 5000s ease-in-out 0s;
+  }
