@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { materialImports } from '../../../core';
+import { materialImports } from '../../core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 

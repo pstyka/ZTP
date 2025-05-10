@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
-import { ForgotPasswordComponent, HomeComponent, LoginComponent, RegisterComponent,  } from './routes/containers';
+import { HomeComponent,  } from './routes/containers';
+import { ForgotPasswordComponent, LoginComponent, RegisterComponent } from './auth';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent},
