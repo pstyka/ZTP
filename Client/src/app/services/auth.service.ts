@@ -1,7 +1,7 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { LoginDto } from "../models/auth";
-import { map, Observable } from "rxjs";
+import { LoginDto, RegisterDto } from "../models/auth";
+import { catchError, map, Observable, throwError } from "rxjs";
 import { environment } from "../../environment";
 
 @Injectable({
@@ -15,7 +15,12 @@ export class AuthService {
         return this.httpClient.post<{ token: string }>(environment.apiUrl + '/auth/login', login).pipe(map(x => x.token));
     }
 
-    public register(register: RegisterDto): Observable<> {
-        
+    public register(register: RegisterDto): Observable<Object> {
+        return this.httpClient.post<any>(environment.apiUrl + '/auth/register', register).pipe(
+            map((r: HttpResponse<any>) => {
+                return r;
+            }),
+            catchError(error => throwError(error))
+        );
     }
 }

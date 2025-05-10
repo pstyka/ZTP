@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { materialImports } from '../../core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AppState } from '../../store';
+import { Store } from '@ngrx/store';
+import { AuthActions } from '../store';
+import { RegisterDto } from '../../models/auth';
 
 @Component({
   selector: 'app-register',
@@ -12,21 +16,21 @@ import { Router } from '@angular/router';
 export class RegisterComponent implements OnInit {
   form!: FormGroup;
 
-  constructor(private fb: FormBuilder, private router: Router) {}
+  constructor(private fb: FormBuilder, private router: Router, private store: Store<AppState>) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password_hash: ['', Validators.required],
-      first_name: ['', Validators.required],
-      last_name: ['', Validators.required],
+      password: ['', Validators.required],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
       phone: ['', Validators.required],
     });
   }
 
   register() {
     if (this.form.valid) {
-      console.log('Sending data:', this.form.value);
+      this.store.dispatch(AuthActions.register( { register: this.form.value as RegisterDto }))
     }
   }
 

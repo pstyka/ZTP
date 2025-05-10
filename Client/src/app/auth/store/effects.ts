@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { catchError, map, mergeMap, of } from "rxjs";
 import { AuthActions } from ".";
@@ -7,6 +7,9 @@ import { AuthService } from "../../services";
 
 @Injectable()
 export class AuthEffects {
+    private actions$ = inject(Actions);
+    private authService = inject(AuthService);
+
     login$ = createEffect(() =>
         this.actions$.pipe(
             ofType(AuthActions.login),
@@ -25,11 +28,17 @@ export class AuthEffects {
         )
     );
 
-    constructor(private actions$: Actions,
-        private authService: AuthService,
-        // private router: Router,
-        // private usersService: UsersService,
-        // private notificationsService: NotificationsService
-    ) { }
-
+    register$ = createEffect(() => 
+        this.actions$.pipe(
+            ofType(AuthActions.register),
+            mergeMap((action) => {
+                return this.authService.register(action.register).pipe(
+                    map(() => AuthActions.registerSuccess()),
+                    catchError((error) => 
+                        of(AuthActions.registerFailure({ error: error.message }))
+                    )
+                );
+            })
+        )
+    );
 }
