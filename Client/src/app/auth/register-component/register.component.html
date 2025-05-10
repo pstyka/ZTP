@@ -33,7 +33,7 @@
         </mat-form-field>
   
         <div class="buttons">
-          <button mat-raised-button color="primary" type="submit">Register</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Register</button>
           <button mat-button type="button" (click)="goToLogin()">Back to Login</button>
         </div>
       </form>

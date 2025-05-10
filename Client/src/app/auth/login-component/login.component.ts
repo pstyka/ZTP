@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { materialImports } from '../../core';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../store';
+import { AuthActions } from '../store';
+import { LoginDto } from '../../models/auth';
 
 @Component({
   selector: 'app-login',
@@ -12,7 +16,7 @@ import { materialImports } from '../../core';
 export class LoginComponent implements OnInit{
   form!: FormGroup;
 
-  constructor(private fb: FormBuilder, private router: Router) {}
+  constructor(private fb: FormBuilder, private router: Router, private store: Store<AppState>) {}
 
   ngOnInit(): void {
     this.initForm();
@@ -20,13 +24,13 @@ export class LoginComponent implements OnInit{
 
   initForm() {
     this.form = this.fb.group({
-      username: ['', Validators.required],
+      email: ['', Validators.required],
       password: ['', Validators.required],
     });
   }
 
   login() {
-    console.log(this.form.value);
+    this.store.dispatch(AuthActions.login({ login: this.form.value as LoginDto }));
   }
 
   register() {

@@ -31,6 +31,7 @@ export class RegisterComponent implements OnInit {
   register() {
     if (this.form.valid) {
       this.store.dispatch(AuthActions.register( { register: this.form.value as RegisterDto }))
+      this.goToLogin();
     }
   }
 
