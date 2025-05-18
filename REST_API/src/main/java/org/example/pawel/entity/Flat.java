@@ -3,6 +3,8 @@ package org.example.pawel.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -28,5 +30,8 @@ public class Flat {
     private Double area;
     private Double price;
     private Boolean isAvailable;
+
+    @OneToMany(mappedBy = "flat", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reservation> reservations;
 
 }
