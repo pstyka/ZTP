@@ -27,6 +27,20 @@ public class FlatController {
         return flatService.getAllFlats();
     }
 
+    @Operation(summary = "Search flats", description = "Search flats based on filter criteria: city, rooms, min/max price, availability, and area.")
+    @GetMapping("/search")
+    public List<FlatDTO> searchFlats(
+            @RequestParam(required = false) String city,
+            @RequestParam(required = false) Integer rooms,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) Boolean isAvailable,
+            @RequestParam(required = false) Double minArea,
+            @RequestParam(required = false) Double maxArea
+    ) {
+        return flatService.searchFlats(city, rooms, minPrice, maxPrice, isAvailable, minArea, maxArea);
+    }
+
     @Operation(summary = "Create a new flat", description = "Adds a new flat to the system.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Flat successfully created"),
