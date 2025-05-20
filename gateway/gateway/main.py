@@ -9,6 +9,8 @@ import requests
 from gateway.middleware.request_id import RequestIDMiddleware
 from gateway.proxy.router import router as proxy_router
 from gateway.auth.router import router as auth_router
+from fastapi.middleware.cors import CORSMiddleware
+
 
 logger = logging.getLogger("gateway.main")
 
@@ -22,6 +24,13 @@ app = FastAPI(
 
 app.add_middleware(RequestIDMiddleware)
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/health", tags=["health"])
 async def health_check():
