@@ -11,9 +11,24 @@ export class AuthService {
     constructor(private httpClient: HttpClient) {
     }
 
-    public login(login: LoginDto): Observable<string> {
-        return this.httpClient.post<{ token: string }>(environment.apiUrl + '/auth/login', login).pipe(map(x => x.token));
+    public login(login: LoginDto): Observable<any> {
+        const body = new URLSearchParams();
+        body.set('grant_type', 'password');
+        body.set('username', login.email);
+        body.set('password', login.password);
+
+        const headers = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'accept': 'application/json'
+        };
+
+        return this.httpClient.post<any>(
+            `${environment.apiUrl}/auth/token`,
+            body.toString(),
+            { headers }
+        );
     }
+
 
     public register(register: RegisterDto): Observable<Object> {
         return this.httpClient.post<any>(environment.apiUrl + '/auth/register', register).pipe(
