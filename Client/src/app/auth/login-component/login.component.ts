@@ -6,6 +6,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
 import { AuthActions } from '../store';
 import { LoginDto } from '../../models/auth';
+import { NotificationService } from '../../services';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,7 @@ import { LoginDto } from '../../models/auth';
 export class LoginComponent implements OnInit{
   form!: FormGroup;
 
-  constructor(private fb: FormBuilder, private router: Router, private store: Store<AppState>) {}
+  constructor(private fb: FormBuilder, private router: Router, private store: Store<AppState>, private notificationService: NotificationService) {}
 
   ngOnInit(): void {
     this.initForm();
