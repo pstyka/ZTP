@@ -21,9 +21,12 @@
   .forgot-password {
     text-align: right;
     color: #3f51b5;
-    cursor: pointer;
     margin-bottom: 16px;
     font-size: 0.9em;
+
+    span {
+      cursor: pointer;
+    }
   }
   
   .buttons {
@@ -40,5 +43,6 @@
   .logo {
     width: 250px;
     height: auto;
+    cursor: pointer;
   }
   

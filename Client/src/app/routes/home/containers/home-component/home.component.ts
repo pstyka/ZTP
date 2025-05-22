@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { materialImports } from '../../../core';
+import { materialImports } from '../../../../core';
 
 @Component({
   selector: 'app-home',
