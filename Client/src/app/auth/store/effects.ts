@@ -76,4 +76,25 @@ export class AuthEffects {
             ),
         { dispatch: false }
     );
+
+    setToken$ = createEffect(() => 
+    this.actions$.pipe(
+        ofType(AuthActions.setToken),
+        mergeMap(() => 
+        this.authService.getToken().pipe(
+            map((token) => {
+            if (token && token !== '') {
+                return AuthActions.setTokenSuccess({ token });
+            } else {
+                return AuthActions.setTokenFailure({ error: 'No token in local storage' });
+            }
+            }),
+            catchError((error) =>
+            of(AuthActions.setTokenFailure({ error: error.message }))
+            )
+        )
+        )
+    )
+    );
+
 }

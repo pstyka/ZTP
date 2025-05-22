@@ -1,14 +1,16 @@
 import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { LoginDto, RegisterDto } from "../models/auth";
-import { catchError, map, Observable, throwError } from "rxjs";
+import { catchError, map, Observable, of, throwError } from "rxjs";
 import { environment } from "../../environment";
+import { Store } from "@ngrx/store";
+import { AppState } from "../store";
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
-    constructor(private httpClient: HttpClient) {
+    constructor(private httpClient: HttpClient, private store: Store<AppState>) {
     }
 
     public login(login: LoginDto): Observable<any> {
@@ -38,4 +40,10 @@ export class AuthService {
             catchError(error => throwError(error))
         );
     }
+
+    public getToken(): Observable<string | null> {
+        const token = localStorage.getItem("auth_token");
+        return of(token);
+    }
+
 }

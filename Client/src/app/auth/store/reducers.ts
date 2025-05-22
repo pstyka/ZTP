@@ -45,6 +45,11 @@ export const reducer = createReducer(
         ...state,
         isLoggedIn: false,
         token: undefined
+    })),
+    on(AuthActions.setTokenSuccess, (state, action) => ({
+        ...state,
+        isLoggedIn: true,
+        token: action.token ?? undefined
     }))
 );
 

@@ -37,3 +37,17 @@ export const registerFailure = createAction(
 export const logout = createAction(
     `${prefix} Logout`
 );
+
+export const setToken = createAction(
+    `${prefix} Set token`
+);
+
+export const setTokenSuccess = createAction(
+    `${prefix} Set token Success`,
+    props<{ token: string | null}>()
+);
+
+export const setTokenFailure = createAction(
+    `${prefix} Set token Failure`,
+    props<{ error: string }>()
+);

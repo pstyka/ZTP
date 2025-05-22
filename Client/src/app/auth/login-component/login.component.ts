@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit{
   }
 
   forgotPassword() {
-    alert('Link do resetu hasła został wysłany!');
+    alert('So you have problem!');
   }
 
   goToHome() {
