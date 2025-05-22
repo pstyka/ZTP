@@ -35,7 +35,7 @@ export class SideNavComponent {
   }
 
   goToMyProfile() {
-    this.router.navigate(['/myProfile']);
+    this.router.navigate(['/my-profile']);
   }  
 
   goToLogin() {

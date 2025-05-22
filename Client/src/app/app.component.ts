@@ -27,11 +27,11 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-  if (typeof window !== 'undefined') {
-    const token = localStorage.getItem('auth_token');
-    if (token) {
-      this.store.dispatch(AuthActions.setToken());
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('auth_token');
+      if (token) {
+        this.store.dispatch(AuthActions.setToken());
+      }
     }
   }
-}
 }
