@@ -33,7 +33,8 @@ export class AuthEffects {
         () =>
             this.actions$.pipe(
             ofType(AuthActions.loginSuccess),
-            map(() => {
+            map((token) => {
+                localStorage.setItem('auth_token', JSON.stringify(token.token));
                 this.router.navigate(['']);
             })
             ),
@@ -65,4 +66,14 @@ export class AuthEffects {
         { dispatch: false }
     );
 
+    onLogout$ = createEffect(
+        () =>
+            this.actions$.pipe(
+            ofType(AuthActions.logout),
+            map(() => {
+                this.notificationService.success('Logout success.');
+            })
+            ),
+        { dispatch: false }
+    );
 }

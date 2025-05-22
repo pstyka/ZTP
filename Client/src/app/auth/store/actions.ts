@@ -33,3 +33,7 @@ export const registerFailure = createAction(
     `${prefix} Register Failure`,
     props<{ error: string }>()
 );
+
+export const logout = createAction(
+    `${prefix} Logout`
+);

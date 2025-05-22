@@ -1,6 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { commonImports, materialImports } from '..';
 import { Router } from '@angular/router';
+import { AppState } from '../../store';
+import { Store } from '@ngrx/store';
+import { AuthActions, getIsLoggedInSelector } from '../../auth/store';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-side-nav',
@@ -10,8 +14,13 @@ import { Router } from '@angular/router';
 })
 export class SideNavComponent {
   isOpen = true;
+  isLoggedIn$!: Observable<boolean | undefined>;
+  isLoggedIn!: boolean | undefined;
 
-  constructor(private router: Router) {}
+  constructor(private store: Store<AppState>, private router: Router) {
+    this.selectIsLoggedIn();
+    this.subscribeIsLoggedIn();
+  }
 
   toggleSidenav() {
     this.isOpen = !this.isOpen;
@@ -24,4 +33,20 @@ export class SideNavComponent {
   goToLogin() {
     this.router.navigate(['/login']);
   }
+
+  logout() {
+    this.store.dispatch(AuthActions.logout());
+  }
+
+  private selectIsLoggedIn(): void {
+    this.isLoggedIn$ = this.store.select(getIsLoggedInSelector);
+  }
+
+  private subscribeIsLoggedIn(): void {
+    this.isLoggedIn$.subscribe(res => {
+      console.log(res);
+      this.isLoggedIn = res
+    });
+  }
+
 }
