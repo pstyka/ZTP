@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
@@ -21,4 +23,5 @@ public class FlatDTO {
     private Double area;
     private Double price;
     private Boolean isAvailable;
+    private List<String> photos;
 }
