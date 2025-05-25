@@ -31,6 +31,11 @@ public class Flat {
     private Double price;
     private Boolean isAvailable;
 
+    @ElementCollection
+    @CollectionTable(name = "flat_photos", joinColumns = @JoinColumn(name = "flat_id"))
+    @Column(name = "photo_url")
+    private List<String> photos;
+
     @OneToMany(mappedBy = "flat", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reservation> reservations;
 
