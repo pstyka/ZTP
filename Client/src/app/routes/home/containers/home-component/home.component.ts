@@ -5,7 +5,7 @@ import { materialImports } from '../../../../core';
   selector: 'app-home',
   imports: [...materialImports],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+  styleUrls: ['../../../../../styles.scss', './home.component.scss']
 })
 export class HomeComponent {
 

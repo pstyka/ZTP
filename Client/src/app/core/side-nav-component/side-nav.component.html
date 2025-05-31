@@ -10,9 +10,8 @@
   
       <mat-nav-list class="nav-list">
         <a mat-list-item (click)="goToHome()">Home</a>
-        <a mat-list-item routerLink="/about">About</a>
-        <a mat-list-item routerLink="/contact">Contact</a>
-        <a *ngIf="isLoggedIn" mat-list-item routerLink="/myProfile">My profile</a>
+        <a *ngIf="isLoggedIn" mat-list-item (click)="goToAddListing()">Add listing</a>
+        <a *ngIf="isLoggedIn" mat-list-item (click)="goToMyProfile()">My profile</a>
         <a *ngIf="isLoggedIn != true" mat-list-item (click)="goToLogin()">Login</a>
         <a *ngIf="isLoggedIn" mat-list-item (click)="logout()">Logout</a>
       </mat-nav-list>

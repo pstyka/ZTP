@@ -30,11 +30,20 @@ export class SideNavComponent {
     this.router.navigate(['/']);
   }
 
+  goToAddListing() {
+    this.router.navigate(['/flats/add'])
+  }
+
+  goToMyProfile() {
+    this.router.navigate(['/my-profile']);
+  }  
+
   goToLogin() {
     this.router.navigate(['/login']);
   }
 
   logout() {
+    localStorage.setItem('auth_token', "");
     this.store.dispatch(AuthActions.logout());
   }
 
@@ -43,10 +52,7 @@ export class SideNavComponent {
   }
 
   private subscribeIsLoggedIn(): void {
-    this.isLoggedIn$.subscribe(res => {
-      console.log(res);
-      this.isLoggedIn = res
-    });
+    this.isLoggedIn$.subscribe(res => this.isLoggedIn = res);
   }
 
 }
