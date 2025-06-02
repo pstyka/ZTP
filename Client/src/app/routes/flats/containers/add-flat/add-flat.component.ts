@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
 import { commonImports, materialImports } from '../../../../core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../../store';
+import { Flat } from '../../../../models/flat';
+import { FlatActions } from '../../store';
 
 @Component({
   selector: 'app-add-flat',
@@ -13,7 +17,7 @@ export class AddFlatComponent {
   form!: FormGroup;
 
   
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private store: Store<AppState>) {
     this.form = this.fb.group({
     name: ['', Validators.required],
     description: [''],
@@ -32,7 +36,7 @@ export class AddFlatComponent {
 
   submit() {
     if (this.form.valid) {
-      console.log('Wysyłam mieszkanie:', this.form.value);
+      this.store.dispatch(FlatActions.addFlat({ flat: this.form.value as Flat }));
     }
   }
 }

@@ -10,6 +10,7 @@ import { AuthEffects } from './auth/store';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { AuthInterceptor } from './services';
 import { UserEffects } from './routes/my-profile/store';
+import { FlatEffects } from './routes/flats/store';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -21,6 +22,6 @@ export const appConfig: ApplicationConfig = {
       withInterceptors([AuthInterceptor])
     ),
     provideStore(rootReducer),
-    provideEffects([AuthEffects, UserEffects]),
+    provideEffects([AuthEffects, UserEffects, FlatEffects]),
   ]
 };
