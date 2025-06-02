@@ -16,3 +16,17 @@ export const addFlatFailure = createAction(
     `${prefix} Add Flat Failure`,
     props<{ error: string }>()
 );
+
+export const getFlats = createAction(
+    `${prefix} Get Flats`
+);
+
+export const getFlatsSuccess = createAction(
+    `${prefix} Get Flats Success`,
+    props<{ flats: Flat[] }>()
+);
+
+export const getFlatsFailure = createAction(
+    `${prefix} Get Flats Failure`,
+    props<{ error: string }>()
+);

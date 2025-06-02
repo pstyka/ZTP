@@ -1,5 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { materialImports } from '../../../../core';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../../store';
+import { FlatActions, getFlatsSelector } from '../../../flats/store';
+import { Observable, take } from 'rxjs';
+import { Flat } from '../../../../models/flat';
+import { environment } from '../../../../../environment';
+import { HttpClient } from '@angular/common/http';
+import { FlatService } from '../../../../services';
 
 @Component({
   selector: 'app-home',
@@ -7,6 +15,36 @@ import { materialImports } from '../../../../core';
   templateUrl: './home.component.html',
   styleUrls: ['../../../../../styles.scss', './home.component.scss']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit{
+  flats$!: Observable<Flat[] | undefined>;
+  flats!: Flat[] | undefined;
 
+  constructor(private store: Store<AppState>, private flatService: FlatService) {
+    // this.selectFlats();
+    // this.subscribeFlats();
+  }
+
+  ngOnInit(): void {
+    this.flatService.getFlats().subscribe(x=>console.log(x));
+    // this.dispatchFlats();
+  }
+
+  onClick() {
+    this.dispatchFlats();
+  }
+
+  private selectFlats() {
+    this.flats$ = this.store.select(getFlatsSelector);
+  }
+
+  private subscribeFlats() {
+    this.flats$.subscribe(flats => {
+      this.flats = flats;
+      console.log(this.flats);
+    })
+  }
+
+  private dispatchFlats() {
+    this.store.dispatch(FlatActions.getFlats());
+  }
 }

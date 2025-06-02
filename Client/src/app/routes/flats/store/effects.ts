@@ -24,4 +24,18 @@ export class FlatEffects {
         )
     );
 
+    getFlats$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(FlatActions.getFlats),
+            mergeMap((action) => {
+                return this.flatService.getFlats().pipe(
+                    map((res) => FlatActions.getFlatsSuccess({ flats: res })),
+                    catchError((error) => {
+                        return of(FlatActions.getFlatsFailure({ error: error.message }));
+                    }
+                    )
+                );
+            })
+        )
+    );
 }
