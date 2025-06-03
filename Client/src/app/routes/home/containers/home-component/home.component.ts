@@ -3,10 +3,8 @@ import { commonImports, materialImports } from '../../../../core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../../store';
 import { FlatActions, getFlatsSelector } from '../../../flats/store';
-import { Observable, take } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Flat } from '../../../../models/flat';
-import { environment } from '../../../../../environment';
-import { HttpClient } from '@angular/common/http';
 import { FlatService } from '../../../../services';
 
 @Component({

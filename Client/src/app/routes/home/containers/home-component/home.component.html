@@ -1,9 +1,18 @@
 <div class="main-container">
-  <span>Flats:</span>
-  <li *ngFor="let flat of flats">
-    <strong>{{ flat.name }}</strong><br>
-    <hr />
-  </li>
-
+  <mat-card>
+    <mat-card-title>Flats list</mat-card-title>
+    <mat-list role="list">
+      <mat-list-item *ngFor="let flat of flats" role="listitem" class="flat-item">
+        <div class="flat-content">
+          <div class="left">
+            <mat-icon class="icon">home</mat-icon>
+            <span class="name">{{ flat.name || 'Brak nazwy' }}</span>
+          </div>
+          <div class="right">
+            <span class="price">{{ flat.price ? (flat.price + ' $') : 'Unknown' }}</span>
+          </div>
+        </div>
+      </mat-list-item>
+    </mat-list>
+  </mat-card>
 </div>
-  
