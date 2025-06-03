@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { materialImports } from '../../../../core';
+import { commonImports, materialImports } from '../../../../core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../../store';
 import { FlatActions, getFlatsSelector } from '../../../flats/store';
@@ -11,7 +11,7 @@ import { FlatService } from '../../../../services';
 
 @Component({
   selector: 'app-home',
-  imports: [...materialImports],
+  imports: [...commonImports, ...materialImports],
   templateUrl: './home.component.html',
   styleUrls: ['../../../../../styles.scss', './home.component.scss']
 })
@@ -25,10 +25,6 @@ export class HomeComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.dispatchFlats();
-  }
-
-  onClick() {
     this.dispatchFlats();
   }
 

@@ -1,4 +1,9 @@
 <div class="main-container">
-    <button mat-raised-button color="primary" (click)="onClick()">Hello guest!</button>
-  </div>
+  <span>Flats:</span>
+  <li *ngFor="let flat of flats">
+    <strong>{{ flat.name }}</strong><br>
+    <hr />
+  </li>
+
+</div>
   
