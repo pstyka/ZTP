@@ -26,6 +26,14 @@ export class HomeComponent implements OnInit{
     this.dispatchFlats();
   }
 
+  getFlatLocation(flat: any): string {
+    const city = flat.city ? `${flat.city},` : '';
+    const district = flat.district ? `${flat.district},` : '';
+    const street = flat.street ? `${flat.street} st` : '';
+    return [city, district, street].filter(part => part.trim()).join(' ');
+  }
+
+
   private selectFlats() {
     this.flats$ = this.store.select(getFlatsSelector);
   }
