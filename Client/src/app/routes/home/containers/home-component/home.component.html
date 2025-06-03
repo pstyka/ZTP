@@ -2,7 +2,7 @@
   <mat-card>
     <mat-card-title>Flats list</mat-card-title>
     <mat-list role="list">
-      <mat-list-item *ngFor="let flat of flats" role="listitem" class="flat-item">
+      <mat-list-item *ngFor="let flat of flats" role="listitem" class="flat-item" (click)="goToFlat(flat)">
         <div class="flat-content">
           <div class="left">
             <mat-icon class="icon">home</mat-icon>

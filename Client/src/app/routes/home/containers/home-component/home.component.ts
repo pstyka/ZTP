@@ -5,7 +5,7 @@ import { AppState } from '../../../../store';
 import { FlatActions, getFlatsSelector } from '../../../flats/store';
 import { Observable } from 'rxjs';
 import { Flat } from '../../../../models/flat';
-import { FlatService } from '../../../../services';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -17,7 +17,7 @@ export class HomeComponent implements OnInit{
   flats$!: Observable<Flat[] | undefined>;
   flats!: Flat[] | undefined;
 
-  constructor(private store: Store<AppState>, private flatService: FlatService) {
+  constructor(private store: Store<AppState>, private router: Router) {
     this.selectFlats();
     this.subscribeFlats();
   }
@@ -33,6 +33,10 @@ export class HomeComponent implements OnInit{
     return [city, district, street].filter(part => part.trim()).join(' ');
   }
 
+  goToFlat(flat: Flat): void {
+    console.log(flat);
+    // this.router.navigate(['/flats/preview', id]);
+  }
 
   private selectFlats() {
     this.flats$ = this.store.select(getFlatsSelector);
