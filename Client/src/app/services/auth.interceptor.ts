@@ -5,10 +5,13 @@ export const AuthInterceptor: HttpInterceptorFn = (
   req: HttpRequest<any>,
   next: HttpHandlerFn
 ): Observable<HttpEvent<any>> => {
+  if (typeof localStorage === 'undefined') {
+    return next(req);
+  }
+
   const raw = localStorage.getItem('auth_token');
 
   if (!raw) {
-    // Brak tokena – idź dalej bez modyfikacji
     return next(req);
   }
 
@@ -23,11 +26,11 @@ export const AuthInterceptor: HttpInterceptorFn = (
     }
   } catch (e) {
     console.warn('auth_token parsing error', e);
-    return next(req); // Nie parsuje poprawnie? Przechodzimy dalej bez tokena
+    return next(req);
   }
 
   if (!accessToken) {
-    return next(req); // Brak access_token – nie ustawiamy nagłówka
+    return next(req);
   }
 
   const authReq = req.clone({

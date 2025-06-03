@@ -20,13 +20,12 @@ export class HomeComponent implements OnInit{
   flats!: Flat[] | undefined;
 
   constructor(private store: Store<AppState>, private flatService: FlatService) {
-    // this.selectFlats();
-    // this.subscribeFlats();
+    this.selectFlats();
+    this.subscribeFlats();
   }
 
   ngOnInit(): void {
-    this.flatService.getFlats().subscribe(x=>console.log(x));
-    // this.dispatchFlats();
+    this.dispatchFlats();
   }
 
   onClick() {
@@ -40,7 +39,6 @@ export class HomeComponent implements OnInit{
   private subscribeFlats() {
     this.flats$.subscribe(flats => {
       this.flats = flats;
-      console.log(this.flats);
     })
   }
 
