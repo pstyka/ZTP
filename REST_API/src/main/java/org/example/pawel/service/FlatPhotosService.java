@@ -1,22 +1,34 @@
 package org.example.pawel.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.pawel.entity.Flat;
 import org.example.pawel.entity.FlatPhoto;
 import org.example.pawel.repository.FlatPhotoRepository;
 import org.example.pawel.repository.FlatRepository;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class FlatPhotosService {
-    private final FlatPhotoRepository flatPhotoRepository;
+
     private final FlatRepository flatRepository;
+    private final FlatPhotoRepository flatPhotoRepository;
+
+    private final String uploadDir = "uploads"; // katalog lokalny, np. src/main/resources/static/uploads
 
     public void addPhotos(Long flatId, List<MultipartFile> files) {
         Flat flat = flatRepository.findById(flatId)
@@ -24,21 +36,32 @@ public class FlatPhotosService {
 
         List<FlatPhoto> photos = files.stream().map(file -> {
             try {
+                String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+                Path filePath = Paths.get(uploadDir, fileName);
+
+                // Utwórz folder, jeśli nie istnieje
+                Files.createDirectories(filePath.getParent());
+                Files.write(filePath, file.getBytes());
+
+                String photoUrl = "/uploads/" + fileName;
+
                 return FlatPhoto.builder()
                         .flat(flat)
-                        .imageData(file.getBytes())
-                        .contentType(file.getContentType())
+                        .url(photoUrl)
                         .build();
             } catch (IOException e) {
-                throw new RuntimeException("Error reading file", e);
+                throw new RuntimeException("Failed to store file", e);
             }
         }).toList();
 
-        flat.getPhotos().addAll(photos);
-        flatRepository.save(flat);
+        flatPhotoRepository.saveAll(photos);
     }
 
-    public Optional<FlatPhoto> getFirstPhotoByFlatId(Long flatId) {
-        return flatPhotoRepository.findFirstByFlatId(flatId);
+    public List<String> getPhotoUrlsByFlatId(Long flatId) {
+        return flatPhotoRepository.findAllByFlatId(flatId).stream()
+                .map(FlatPhoto::getUrl)
+                .toList();
     }
 }
+
+

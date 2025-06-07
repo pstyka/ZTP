@@ -2,6 +2,7 @@ package org.example.pawel.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
 
 @Entity
 @Getter
@@ -15,15 +16,11 @@ public class FlatPhoto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Lob
-    @Column(name = "image_data", nullable = false)
-    private byte[] imageData;
-
-    @Column(name = "content_type", nullable = false)
-    private String contentType;
+    private String url; // <-- ścieżka lub URL do pliku
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "flat_id")
     private Flat flat;
 }
+
 

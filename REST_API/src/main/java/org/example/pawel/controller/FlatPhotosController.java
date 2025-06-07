@@ -13,30 +13,22 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping("/rest/flats")
+@RequestMapping("/flats")
 @RequiredArgsConstructor
 public class FlatPhotosController {
-    @Autowired
+
     private final FlatPhotosService flatPhotoService;
 
-    @PostMapping(value = "/{flatId}/photos", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> uploadFlatPhotos(
-            @PathVariable Long flatId,
-            @RequestPart("photos") List<MultipartFile> photos) {
+    @PostMapping("/{flatId}/photos")
+    public ResponseEntity<Void> uploadPhotos(@PathVariable Long flatId,
+                                             @RequestParam("photos") List<MultipartFile> photos) {
         flatPhotoService.addPhotos(flatId, photos);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{flatId}/photos")
-    public ResponseEntity<byte[]> getFirstPhotoByFlatId(@PathVariable Long flatId) {
-        return flatPhotoService.getFirstPhotoByFlatId(flatId)
-                .map(photo -> {
-                    HttpHeaders headers = new HttpHeaders();
-                    headers.setContentType(MediaType.parseMediaType(photo.getContentType()));
-                    return new ResponseEntity<>(photo.getImageData(), headers, HttpStatus.OK);
-                })
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<List<String>> getPhotoUrls(@PathVariable Long flatId) {
+        return ResponseEntity.ok(flatPhotoService.getPhotoUrlsByFlatId(flatId));
     }
-
-
 }
+
