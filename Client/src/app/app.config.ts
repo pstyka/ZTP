@@ -7,9 +7,10 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 import { rootReducer } from './store';
 import { provideEffects } from '@ngrx/effects';
 import { AuthEffects } from './auth/store';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { AuthInterceptor } from './services';
 import { UserEffects } from './routes/my-profile/store';
+import { FlatEffects } from './routes/flats/store';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -18,9 +19,10 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(withEventReplay()),
     provideAnimations(),
     provideHttpClient(
+      withFetch(),
       withInterceptors([AuthInterceptor])
     ),
     provideStore(rootReducer),
-    provideEffects([AuthEffects, UserEffects]),
+    provideEffects([AuthEffects, UserEffects, FlatEffects]),
   ]
 };

@@ -1,5 +1,4 @@
 //package org.example.pawel.Flat;
-//
 //import org.example.pawel.dto.FlatDTO;
 //import org.example.pawel.entity.Flat;
 //import org.example.pawel.entity.FlatPhoto;

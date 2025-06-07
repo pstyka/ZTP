@@ -10,7 +10,6 @@ import java.util.UUID;
 @Repository
 public interface FlatPhotoRepository extends JpaRepository<FlatPhoto, UUID> {
 
-
     List<FlatPhoto> findAllByFlatId(UUID flatId);
 
 }

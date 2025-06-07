@@ -1,4 +1,28 @@
 <div class="main-container">
-    <button mat-raised-button color="primary">Hello guest!</button>
-  </div>
-  
+  <mat-card>
+    <mat-card-title>Flats list</mat-card-title>
+    <mat-list role="list">
+      <mat-list-item *ngFor="let flat of flats" role="listitem" class="flat-item" (click)="goToFlat(flat)">
+        <div class="flat-content">
+          <div class="left">
+            <mat-icon class="icon">home</mat-icon>
+            <div class="info">
+              <div class="name">{{ flat.name || 'Brak nazwy' }}</div>
+              <div class="area">
+                <mat-icon class="area-icon">aspect_ratio</mat-icon>
+                {{ flat.area ? (flat.area + ' m²') : 'Unknown area' }}
+              </div>
+            </div>
+          </div>
+          <div class="right">
+            <div class="price">{{ flat.price ? (flat.price + ' $') : 'Unknown price' }}</div>
+            <div class="location">
+              <mat-icon class="location-icon">place</mat-icon>
+              {{ getFlatLocation(flat) }}
+            </div>
+          </div>
+        </div>
+      </mat-list-item>
+    </mat-list>
+  </mat-card>
+</div>

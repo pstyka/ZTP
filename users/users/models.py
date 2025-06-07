@@ -1,9 +1,9 @@
 from uuid import UUID, uuid4
-from sqlalchemy import String, DateTime, func
+from sqlalchemy import String, DateTime, func, ForeignKey, Text
 from sqlalchemy.orm import (
     DeclarativeBase,
     Mapped,
-    mapped_column,
+    mapped_column, relationship,
 )
 from enum import Enum
 from datetime import datetime
@@ -40,4 +40,16 @@ class User(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
 
+class Message(Base):
+    __tablename__ = "messages"
 
+    id: Mapped[UUID] = mapped_column(
+        primary_key=True, index=True, unique=True, default=uuid4
+    )
+    sender_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"), index=True)
+    receiver_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"), index=True)
+    content: Mapped[str] = mapped_column(Text)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+    sender: Mapped["User"] = relationship("User", foreign_keys=[sender_id])
+    receiver: Mapped["User"] = relationship("User", foreign_keys=[receiver_id])
