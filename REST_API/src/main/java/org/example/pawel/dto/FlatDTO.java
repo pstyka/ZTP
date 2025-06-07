@@ -1,16 +1,16 @@
 package org.example.pawel.dto;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class FlatDTO {
+    private Long id;
     private String name;
     private String description;
     private String city;
@@ -23,5 +23,6 @@ public class FlatDTO {
     private Double area;
     private Double price;
     private Boolean isAvailable;
-    private List<String> photos;
+    private Long visitCount;
+
 }

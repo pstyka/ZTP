@@ -2,10 +2,15 @@ package org.example.pawel.config;
 
 import lombok.RequiredArgsConstructor;
 import org.example.pawel.entity.Flat;
+import org.example.pawel.entity.FlatPhoto;
 import org.example.pawel.repository.FlatRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Configuration
@@ -27,13 +32,12 @@ public class DataInitializer implements CommandLineRunner {
             System.out.println("Inserting sample flats into database...");
             flatRepository.saveAll(flats);
             System.out.println("Inserted " + flats.size() + " flats.");
-
         }
     }
 
     private Flat createFlat(String name, String desc, String city, String district, String street, String building, String flatNum,
                             String postalCode, int rooms, double area, double price, boolean available, String photoFileName) {
-        return Flat.builder()
+        Flat flat = Flat.builder()
                 .name(name)
                 .description(desc)
                 .city(city)
@@ -46,7 +50,39 @@ public class DataInitializer implements CommandLineRunner {
                 .area(area)
                 .price(price)
                 .isAvailable(available)
-                .photos(List.of("/flatPhotos/" + photoFileName))
+                .visitCount(0L)
                 .build();
+
+        try {
+            // Wczytaj dane obrazka
+            ClassPathResource resource = new ClassPathResource("flatPhotos/" + photoFileName);
+            byte[] photoData = resource.getInputStream().readAllBytes();
+
+            // Pobierz rozszerzenie
+            String extension = photoFileName.substring(photoFileName.lastIndexOf('.') + 1).toLowerCase();
+
+            // Określ contentType ręcznie (bez probeContentType, które działa kiepsko w JAR)
+            String contentType = switch (extension) {
+                case "jpg", "jpeg" -> "image/jpeg";
+                case "png" -> "image/png";
+                case "gif" -> "image/gif";
+                case "bmp" -> "image/bmp";
+                default -> "application/octet-stream"; // fallback
+            };
+
+            FlatPhoto photo = FlatPhoto.builder()
+                    .imageData(photoData)
+                    .contentType(contentType)
+                    .flat(flat)
+                    .build();
+
+            flat.setPhotos(List.of(photo));
+
+        } catch (IOException e) {
+            System.err.println("Could not load photo " + photoFileName + ": " + e.getMessage());
+        }
+
+        return flat;
     }
+
 }
