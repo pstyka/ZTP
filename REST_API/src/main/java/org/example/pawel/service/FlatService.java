@@ -3,12 +3,17 @@ package org.example.pawel.service;
 import lombok.AllArgsConstructor;
 import org.example.pawel.dto.FlatDTO;
 import org.example.pawel.entity.Flat;
+import org.example.pawel.entity.FlatPhoto;
 import org.example.pawel.mapper.FlatDTOMapper;
+import org.example.pawel.repository.FlatPhotoRepository;
 import org.example.pawel.repository.FlatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,6 +25,9 @@ public class FlatService {
 
     @Autowired
     private FlatDTOMapper flatDTOMapper;
+
+    @Autowired
+    private final FlatPhotoRepository flatPhotoRepository;
 
     public List<FlatDTO> getAllFlats() {
         return flatRepository.findAll().stream()
@@ -41,12 +49,12 @@ public class FlatService {
                 .collect(Collectors.toList());
     }
 
-    public FlatDTO addFlat(FlatDTO flatDTO) {
-        Flat flat = flatDTOMapper.mapToEntity(flatDTO);
-        Flat saved = flatRepository.save(flat);
-        return flatDTOMapper.mapToDTO(saved);
+    public Long addFlat(FlatDTO dto) {
+        Flat flat = flatDTOMapper.mapToEntity(dto);
+        flat.setVisitCount(0L);
+        flatRepository.save(flat);
+        return flat.getId();
     }
-
     public void deleteFlat(Long id) {
         flatRepository.deleteById(id);
     }
@@ -72,4 +80,18 @@ public class FlatService {
         return flatDTOMapper.mapToDTO(updated);
     }
 
+    public FlatDTO getFlatById(Long id) {
+        Flat flat = flatRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Flat not found with id " + id));
+
+        flat.setVisitCount(flat.getVisitCount() + 1);
+        flatRepository.save(flat);
+
+        return flatDTOMapper.mapToDTO(flat);
+    }
+
+    public Optional<FlatPhoto> getPhotoByFlatIdAndPhotoId(Long flatId, Long photoId) {
+        return flatPhotoRepository.findById(photoId)
+                .filter(photo -> photo.getFlat() != null && photo.getFlat().getId().equals(flatId));
+    }
 }

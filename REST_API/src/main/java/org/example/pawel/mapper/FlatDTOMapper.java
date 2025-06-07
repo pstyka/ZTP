@@ -1,13 +1,24 @@
 package org.example.pawel.mapper;
 
+import lombok.RequiredArgsConstructor;
 import org.example.pawel.dto.FlatDTO;
 import org.example.pawel.entity.Flat;
+import org.example.pawel.entity.FlatPhoto;
+import org.example.pawel.repository.FlatPhotoRepository;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-@Service
+import java.util.List;
+
+@Component
+@RequiredArgsConstructor
 public class FlatDTOMapper {
+
+    private final FlatPhotoRepository flatPhotoRepository;
+
     public FlatDTO mapToDTO(Flat flat) {
         return FlatDTO.builder()
+                .id(flat.getId())
                 .name(flat.getName())
                 .description(flat.getDescription())
                 .city(flat.getCity())
@@ -20,11 +31,12 @@ public class FlatDTOMapper {
                 .area(flat.getArea())
                 .price(flat.getPrice())
                 .isAvailable(flat.getIsAvailable())
+                .visitCount(flat.getVisitCount())
                 .build();
     }
 
     public Flat mapToEntity(FlatDTO dto) {
-        return Flat.builder()
+        Flat flat = Flat.builder()
                 .name(dto.getName())
                 .description(dto.getDescription())
                 .city(dto.getCity())
@@ -37,6 +49,10 @@ public class FlatDTOMapper {
                 .area(dto.getArea())
                 .price(dto.getPrice())
                 .isAvailable(dto.getIsAvailable())
+                .visitCount(dto.getVisitCount())
                 .build();
+
+
+        return flat;
     }
 }

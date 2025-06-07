@@ -7,9 +7,21 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+        connection:
+          autocommit: false
 
+  servlet:
+    multipart:
+        enabled: true
+        max-file-size: 50MB
+        max-request-size: 100MB
 
   springdoc:
     api-docs:

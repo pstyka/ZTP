@@ -1,17 +1,28 @@
 package org.example.pawel.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.pawel.dto.FlatDTO;
+import org.example.pawel.entity.FlatPhoto;
+import org.example.pawel.service.FlatPhotosService;
 import org.example.pawel.service.FlatService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.URLConnection;
 import java.util.List;
+import java.util.Optional;
 
 @Tag(name = "Flats", description = "Operations related to managing rental flats")
 @RestController
@@ -20,6 +31,9 @@ public class FlatController {
 
     @Autowired
     private FlatService flatService;
+
+    @Autowired
+    private FlatPhotosService flatPhotosService;
 
     @Operation(summary = "Get all flats", description = "Returns a list of all flats available in the system.")
     @GetMapping
@@ -47,8 +61,9 @@ public class FlatController {
             @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
     @PostMapping
-    public ResponseEntity<FlatDTO> createFlat(@RequestBody FlatDTO flatDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(flatService.addFlat(flatDTO));
+    public ResponseEntity<Long> createFlat(@RequestBody FlatDTO flatDTO) {
+        Long flatId = flatService.addFlat(flatDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(flatId);
     }
 
     @Operation(summary = "Delete a flat", description = "Deletes a flat by its ID.")
@@ -71,4 +86,12 @@ public class FlatController {
     public ResponseEntity<FlatDTO> updateFlat(@PathVariable Long id, @RequestBody FlatDTO flatDTO) {
         return ResponseEntity.ok(flatService.updateFlat(id, flatDTO));
     }
+
+    @Operation(summary = "Get flat by ID")
+    @GetMapping("/{id}")
+    public ResponseEntity<FlatDTO> getFlat(@PathVariable Long id) {
+        FlatDTO flatDTO = flatService.getFlatById(id);
+        return ResponseEntity.ok(flatDTO);
+    }
+
 }
