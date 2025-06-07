@@ -2,6 +2,10 @@ package org.example.pawel.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.GenericGenerator;
+
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -12,18 +16,16 @@ import lombok.*;
 public class FlatPhoto {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(name = "id", columnDefinition = "uuid", updatable = false, nullable = false)
+    private UUID id;
 
-    @Lob
-    @Column(name = "image_data", nullable = false)
-    private byte[] imageData;
-
-    @Column(name = "content_type", nullable = false)
-    private String contentType;
+    private String url;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "flat_id")
     private Flat flat;
 }
+
 

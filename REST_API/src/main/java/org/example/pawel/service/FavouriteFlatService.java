@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class FavouriteFlatService {
@@ -24,7 +25,7 @@ public class FavouriteFlatService {
     private FlatDTOMapper flatDTOMapper;
 
     public List<FlatDTO> getUserFavorites(String userId) {
-        List<Long> flatIds = favouriteFlatRepository.findAllByUserId(userId).stream()
+        List<UUID> flatIds = favouriteFlatRepository.findAllByUserId(userId).stream()
                 .map(FavouriteFlat::getFlatId)
                 .toList();
 
@@ -33,16 +34,16 @@ public class FavouriteFlatService {
                 .toList();
     }
 
-    public void addFavorite(Long flatId, String userId) {
+    public void addFavorite(UUID flatId, String userId) {
         FavouriteFlat favouriteFlat = createFavouriteFlat(userId, flatId);
         favouriteFlatRepository.save(favouriteFlat);
     }
 
-    public void removeFavorite(Long flatId, String userId) {
+    public void removeFavorite(UUID flatId, String userId) {
         favouriteFlatRepository.deleteByUserIdAndFlatId(userId, flatId);
     }
 
-    public FavouriteFlat createFavouriteFlat(String userId, Long flatId) {
+    public FavouriteFlat createFavouriteFlat(String userId, UUID flatId) {
         FavouriteFlat favouriteFlat = new FavouriteFlat();
         favouriteFlat.setUserId(userId);
         favouriteFlat.setFlatId(flatId);
