@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/rest/favourites")
@@ -28,14 +29,14 @@ public class FavouritesController {
 
     @Operation(summary = "Add flat to favourite list", description = "Adds a flat to the user's favourite list.")
     @PostMapping("/{flatId}")
-    public ResponseEntity<?> addFlatToFavouriteList(@PathVariable Long flatId, @RequestHeader("X-User-ID") String userId) {
+    public ResponseEntity<?> addFlatToFavouriteList(@PathVariable UUID flatId, @RequestHeader("X-User-ID") String userId) {
         favouriteFlatService.addFavorite(flatId, userId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @Operation(summary = "Remove flat from favourite list", description = "Removes a flat from the user's favourite list.")
     @DeleteMapping("/{flatId}")
-    public ResponseEntity<?> removeFlatFromFavouriteList(@PathVariable Long flatId, @RequestHeader("X-User-ID") String userId) {
+    public ResponseEntity<?> removeFlatFromFavouriteList(@PathVariable UUID flatId, @RequestHeader("X-User-ID") String userId) {
         favouriteFlatService.removeFavorite(flatId, userId);
         return ResponseEntity.noContent().build();
     }

@@ -3,6 +3,7 @@ package org.example.pawel.dto;
 import lombok.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -10,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FlatDTO {
-    private Long id;
+    private UUID id;
     private String name;
     private String description;
     private String city;

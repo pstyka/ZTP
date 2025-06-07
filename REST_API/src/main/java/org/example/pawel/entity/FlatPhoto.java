@@ -3,6 +3,9 @@ package org.example.pawel.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.GenericGenerator;
+
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -13,10 +16,12 @@ import org.hibernate.annotations.DynamicInsert;
 public class FlatPhoto {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(name = "id", columnDefinition = "uuid", updatable = false, nullable = false)
+    private UUID id;
 
-    private String url; // <-- ścieżka lub URL do pliku
+    private String url;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "flat_id")

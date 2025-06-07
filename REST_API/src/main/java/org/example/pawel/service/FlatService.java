@@ -1,6 +1,7 @@
 package org.example.pawel.service;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.example.pawel.dto.FlatDTO;
 import org.example.pawel.entity.Flat;
 import org.example.pawel.entity.FlatPhoto;
@@ -8,17 +9,25 @@ import org.example.pawel.mapper.FlatDTOMapper;
 import org.example.pawel.repository.FlatPhotoRepository;
 import org.example.pawel.repository.FlatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class FlatService {
+
+    @Value("${app.upload.dir:/uploads}")
+    private String uploadDir;
 
     @Autowired
     private FlatRepository flatRepository;
@@ -28,6 +37,8 @@ public class FlatService {
 
     @Autowired
     private final FlatPhotoRepository flatPhotoRepository;
+
+
 
     public List<FlatDTO> getAllFlats() {
         return flatRepository.findAll().stream()
@@ -49,17 +60,46 @@ public class FlatService {
                 .collect(Collectors.toList());
     }
 
-    public Long addFlat(FlatDTO dto) {
+    public UUID addFlat(FlatDTO dto) {
         Flat flat = flatDTOMapper.mapToEntity(dto);
         flat.setVisitCount(0L);
         flatRepository.save(flat);
         return flat.getId();
     }
-    public void deleteFlat(Long id) {
+
+    public UUID addFlatWithPhotos(FlatDTO flatDTO, List<MultipartFile> files) {
+        Flat flat = flatDTOMapper.mapToEntity(flatDTO);
+        Flat savedFlat = flatRepository.save(flat); // najpierw zapisujemy mieszkanie
+
+        List<FlatPhoto> photos = files.stream().map(file -> {
+            try {
+                String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+                Path filePath = Paths.get(uploadDir, fileName);
+
+                Files.createDirectories(filePath.getParent()); // utwórz folder, jeśli nie istnieje
+                Files.write(filePath, file.getBytes());
+
+                String photoUrl = "/uploads/" + fileName;
+
+                return FlatPhoto.builder()
+                        .flat(savedFlat)
+                        .url(photoUrl)
+                        .build();
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to store file", e);
+            }
+        }).toList();
+
+        flatPhotoRepository.saveAll(photos);
+        return savedFlat.getId();
+    }
+
+
+    public void deleteFlat(UUID id) {
         flatRepository.deleteById(id);
     }
 
-    public FlatDTO updateFlat(Long id, FlatDTO flatDTO) {
+    public FlatDTO updateFlat(UUID id, FlatDTO flatDTO) {
         Flat flat = flatRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Flat not found with id " + id));
 
@@ -80,7 +120,7 @@ public class FlatService {
         return flatDTOMapper.mapToDTO(updated);
     }
 
-    public FlatDTO getFlatById(Long id) {
+    public FlatDTO getFlatById(UUID id) {
         Flat flat = flatRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Flat not found with id " + id));
 
@@ -90,8 +130,4 @@ public class FlatService {
         return flatDTOMapper.mapToDTO(flat);
     }
 
-    public Optional<FlatPhoto> getPhotoByFlatIdAndPhotoId(Long flatId, Long photoId) {
-        return flatPhotoRepository.findById(photoId)
-                .filter(photo -> photo.getFlat() != null && photo.getFlat().getId().equals(flatId));
-    }
 }

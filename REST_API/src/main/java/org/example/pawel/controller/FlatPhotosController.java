@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/flats")
@@ -20,14 +21,14 @@ public class FlatPhotosController {
     private final FlatPhotosService flatPhotoService;
 
     @PostMapping("/{flatId}/photos")
-    public ResponseEntity<Void> uploadPhotos(@PathVariable Long flatId,
+    public ResponseEntity<Void> uploadPhotos(@PathVariable UUID flatId,
                                              @RequestParam("photos") List<MultipartFile> photos) {
         flatPhotoService.addPhotos(flatId, photos);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{flatId}/photos")
-    public ResponseEntity<List<String>> getPhotoUrls(@PathVariable Long flatId) {
+    public ResponseEntity<List<String>> getPhotoUrls(@PathVariable UUID flatId) {
         return ResponseEntity.ok(flatPhotoService.getPhotoUrlsByFlatId(flatId));
     }
 }

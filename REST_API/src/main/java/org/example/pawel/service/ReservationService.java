@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,7 +26,7 @@ public class ReservationService {
     @Autowired
     private ReservationDTOMapper reservationDTOMapper;
 
-    public void createReservation(Long flatId, String userId) {
+    public void createReservation(UUID flatId, String userId) {
         Flat flat = getFlatById(flatId);
 
         checkFlatAvailability(flat);
@@ -42,7 +43,7 @@ public class ReservationService {
                 .collect(Collectors.toList());
     }
 
-    private Flat getFlatById(Long flatId) {
+    private Flat getFlatById(UUID flatId) {
         return flatRepository.findById(flatId)
                 .orElseThrow(() -> new RuntimeException("Flat not found"));
     }

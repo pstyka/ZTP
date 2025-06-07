@@ -65,12 +65,13 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/users
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: password
+    volumes:
+      - ./uploads:/uploads
     depends_on:
       - postgres
     networks:
       - app-network
     restart: unless-stopped
-
 
 volumes:
   redis_data:

@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.URLConnection;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Tag(name = "Flats", description = "Operations related to managing rental flats")
 @RestController
@@ -61,8 +62,17 @@ public class FlatController {
             @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
     @PostMapping
-    public ResponseEntity<Long> createFlat(@RequestBody FlatDTO flatDTO) {
-        Long flatId = flatService.addFlat(flatDTO);
+    public ResponseEntity<UUID> createFlat(@RequestBody FlatDTO flatDTO) {
+        UUID flatId = flatService.addFlat(flatDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(flatId);
+    }
+
+    @PostMapping("/with-photos")
+    public ResponseEntity<UUID> createFlatWithPhotos(
+            @RequestPart("flat") FlatDTO flatDTO,
+            @RequestPart("photos") List<MultipartFile> photos) {
+
+        UUID flatId = flatService.addFlatWithPhotos(flatDTO, photos);
         return ResponseEntity.status(HttpStatus.CREATED).body(flatId);
     }
 
@@ -72,7 +82,7 @@ public class FlatController {
             @ApiResponse(responseCode = "404", description = "Flat not found with the given ID")
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteFlat(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteFlat(@PathVariable UUID id) {
         flatService.deleteFlat(id);
         return ResponseEntity.noContent().build();
     }
@@ -83,13 +93,13 @@ public class FlatController {
             @ApiResponse(responseCode = "404", description = "Flat not found with the given ID")
     })
     @PutMapping("/{id}")
-    public ResponseEntity<FlatDTO> updateFlat(@PathVariable Long id, @RequestBody FlatDTO flatDTO) {
+    public ResponseEntity<FlatDTO> updateFlat(@PathVariable UUID id, @RequestBody FlatDTO flatDTO) {
         return ResponseEntity.ok(flatService.updateFlat(id, flatDTO));
     }
 
     @Operation(summary = "Get flat by ID")
     @GetMapping("/{id}")
-    public ResponseEntity<FlatDTO> getFlat(@PathVariable Long id) {
+    public ResponseEntity<FlatDTO> getFlat(@PathVariable UUID id) {
         FlatDTO flatDTO = flatService.getFlatById(id);
         return ResponseEntity.ok(flatDTO);
     }
