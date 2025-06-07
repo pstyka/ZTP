@@ -7,7 +7,8 @@ from fastapi import FastAPI
 from gateway.utils.redis import redis_client
 import requests
 from gateway.middleware.request_id import RequestIDMiddleware
-from gateway.proxy.router import router as proxy_router
+from gateway.proxy.users_router import router as proxy_users_router
+from gateway.proxy.rest_router import router as proxy_rest_router
 from gateway.auth.router import router as auth_router
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -62,7 +63,8 @@ async def get_root():
     }
 
 
-app.include_router(proxy_router, prefix=settings.API_PREFIX)
+app.include_router(proxy_users_router, prefix=settings.API_PREFIX)
+app.include_router(proxy_rest_router, prefix=settings.API_PREFIX)
 app.include_router(auth_router, prefix=settings.API_PREFIX)
 
 

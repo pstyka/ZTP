@@ -24,16 +24,16 @@ class Settings(BaseSettings):
 
     SERVICE_TIMEOUT: float = 10.0
 
-    FRONTEND_SERVICE_URL: str = "http://frontend-service:3000"
-    USER_SERVICE_URL: str = "http://users:8080"
-    REST_API_SERVICE_URL: str = "http://rest-api-service:8888"
+    FRONTEND_SERVICE_URL: str = "localhost:4200"
+    USER_SERVICE_URL: str = "http://users:8888"
+    REST_API_SERVICE_URL: str = "http://restapi:8080"
 
     @property
     def SERVICES(self) -> dict[str, str]:
         return {
             "frontend": self.FRONTEND_SERVICE_URL,
             "users": self.USER_SERVICE_URL,
-            "rest-api": self.REST_API_SERVICE_URL,
+            "rest": self.REST_API_SERVICE_URL,
         }
 
     @property

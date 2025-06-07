@@ -1,7 +1,8 @@
 import uvicorn
 from users.core.config import settings
 from fastapi import FastAPI, status
-from users.router import router as user_router
+from users.routers.router import router as user_router
+from users.routers.messages import router as message_router
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -25,6 +26,7 @@ async def get_root():
     }
 
 app.include_router(user_router)
+app.include_router(message_router)
 
 
 if __name__ == "__main__":
