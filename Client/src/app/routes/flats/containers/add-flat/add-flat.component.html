@@ -58,9 +58,14 @@
           <mat-label>Price (USD)</mat-label>
           <input matInput type="number" formControlName="price" min="0" />
         </mat-form-field>
+      
+        <div class="file-upload">
+          <label for="fileInput">Photos</label>
+          <input id="fileInput" type="file" multiple (change)="onFilesSelected($event)" />
+        </div>
+
       </div>
 
-      <!-- Submit button OUTSIDE the form grid -->
       <div class="actions">
         <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
           Submit

@@ -17,7 +17,7 @@ export class FlatEffects {
             ofType(FlatActions.addFlat),
             mergeMap((action) => {
                 return this.flatService.add(action.flat).pipe(
-                    map(() => FlatActions.addFlatSuccess()),
+                    map((res) => FlatActions.addFlatSuccess({ id: res })),
                     catchError((error) => {
                         return of(FlatActions.addFlatFailure({ error: error.message }));
                     }
@@ -46,6 +46,21 @@ export class FlatEffects {
                     map((res) => FlatActions.getFlatsSuccess({ flats: res })),
                     catchError((error) => {
                         return of(FlatActions.getFlatsFailure({ error: error.message }));
+                    }
+                    )
+                );
+            })
+        )
+    );
+
+    addFlatPhotos$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(FlatActions.addFlatPhotos),
+            mergeMap((action) => {
+                return this.flatService.addPhotos(action.id, action.photos).pipe(
+                    map((res) => FlatActions.addFlatPhotosSuccess()),
+                    catchError((error) => {
+                        return of(FlatActions.addFlatPhotosFailure({ error: error.message }));
                     }
                     )
                 );

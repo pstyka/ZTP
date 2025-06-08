@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/flats")
+@RequestMapping("/rest/flats")
 @RequiredArgsConstructor
 public class FlatPhotosController {
 
