@@ -13,4 +13,6 @@ export interface Flat {
     price?: number;
     isAvailable?: boolean;
     visitCount?: number;
+    createdAt?: string;
+    updatedAt?: string;
 }

@@ -52,11 +52,26 @@ export const getFlatPhotos = createAction(
 );
 
 export const getFlatPhotosSuccess = createAction(
-    `${prefix} Get Flats Photos Success`,
+    `${prefix} Get Flat Photos Success`,
     props<{ urls: string[] }>()
 );
 
 export const getFlatPhotosFailure = createAction(
-    `${prefix} Get Flats Photos Failure`,
+    `${prefix} Get Flat Photos Failure`,
+    props<{ error: string }>()
+);
+
+export const getFlat = createAction(
+    `${prefix} Get Flat`,
+    props<{ id: string }>()
+);
+
+export const getFlatSuccess = createAction(
+    `${prefix} Get Flat Success`,
+    props<{ flat: Flat }>()
+);
+
+export const getFlatFailure = createAction(
+    `${prefix} Get Flats Failure`,
     props<{ error: string }>()
 );

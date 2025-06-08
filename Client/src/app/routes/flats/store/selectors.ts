@@ -12,3 +12,8 @@ export const getFlatPhotosUrlsSelector = createSelector(
     selectFeature, 
     (state) => state.flatPhotosUrls
 );
+
+export const getFlatSelector = createSelector(
+    selectFeature,
+    (state) => state.flat
+);

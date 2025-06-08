@@ -59,9 +59,12 @@
           <input matInput type="number" formControlName="price" min="0" />
         </mat-form-field>
       
-        <div class="file-upload">
-          <label for="fileInput">Photos</label>
-          <input id="fileInput" type="file" multiple (change)="onFilesSelected($event)" />
+        <div class="file-upload full-width">
+          <mat-card-title>Add photos</mat-card-title>
+          <input id="fileInput" type="file" multiple (change)="onFilesSelected($event)" class="file-input" />
+          <div class="file-info" *ngIf="selectedFiles?.length">
+            {{ selectedFiles.length }} file(s) selected
+          </div>
         </div>
 
       </div>
