@@ -2,6 +2,7 @@ import { createReducer, on } from "@ngrx/store";
 import { FlatActions, FlatState } from "./index";
 
 export const initialState: FlatState = {
+    flat: undefined,
     flats: undefined,
     flatPhotosUrls: undefined,
 };
@@ -19,6 +20,10 @@ export const reducer = createReducer(
     on(FlatActions.getFlatPhotosSuccess, (state, action) => ({
         ...state,
         flatPhotosUrls: action.urls
+    })),
+    on(FlatActions.getFlatSuccess, (state, action) => ({
+        ...state,
+        flat: action.flat
     }))
 );
 

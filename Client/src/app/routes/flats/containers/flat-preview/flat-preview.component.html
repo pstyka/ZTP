@@ -1,10 +1,42 @@
-<div class="photo-gallery" *ngIf="flatPhotosUrls && flatPhotosUrls.length > 0; else noPhotos">
-  <h3>Zdjęcia mieszkania</h3>
-  <div class="photo-grid">
-    <img *ngFor="let photoUrl of flatPhotosUrls" [src]="photoUrl" alt="Flat photo" class="photo" />
-  </div>
-</div>
+<div class="main-container" *ngIf="flat">
+  <mat-card>
+    <div class="flat-preview-layout">
+      <div class="flat-image">
+        <img *ngIf="flatPhotosUrls?.length" [src]="flatPhotosUrls?.at(0)" alt="Flat photo" />
+      </div>
 
-<ng-template #noPhotos>
-  <p>Brak zdjęć do wyświetlenia.</p>
-</ng-template>
+      <div class="flat-details">
+        <div class="info">
+          <p class="posted">Posted: {{ flat.createdAt | date: 'dd.MM.yyyy, HH:mm' }}</p>
+          <h2>{{ flat.name }}</h2>
+          <p *ngIf="flat.city || flat.district || flat.street">
+            {{ flat.city }}, {{ flat.district }}, {{ flat.street }} {{ flat.buildingNumber }}/{{ flat.flatNumber }}
+          </p>
+          <p><strong>Rooms:</strong> {{ flat.rooms }}</p>
+          <p><strong>Area:</strong> {{ flat.area }} m²</p>
+          <p><strong>Price:</strong> {{ flat.price }} USD</p>
+          <p><strong>Postal code:</strong> {{ flat.postalCode }}</p>
+        </div>
+
+        <div class="message">
+           <button mat-raised-button color="primary" class="full-width-button" type="submit">Send message</button>
+        </div>
+
+
+        <h2>Location</h2>
+        <div class="map-container" *ngIf="flat">
+          <div id="map" class="map"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flat-description" *ngIf="flat.description">
+      <h3>Description</h3>
+      <p>{{ flat.description }}</p>
+    </div>
+
+    <div class="views">
+        <strong>Views:</strong> {{ flat.visitCount ?? 0 }}
+    </div>
+  </mat-card>
+</div>
