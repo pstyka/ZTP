@@ -45,6 +45,7 @@ export class SideNavComponent {
   logout() {
     localStorage.setItem('auth_token', "");
     this.store.dispatch(AuthActions.logout());
+    this.router.navigate(['']);
   }
 
   private selectIsLoggedIn(): void {
