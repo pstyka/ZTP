@@ -1,14 +1,34 @@
-<div class="main-container">
+<div class="main-container" *ngIf="flat">
+  <mat-card>
+    <div class="flat-preview-layout">
+      <div class="flat-image">
+        <img *ngIf="flatPhotosUrls?.length" [src]="flatPhotosUrls?.at(0)" alt="Flat photo" />
+      </div>
 
+      <div class="flat-details">
+        <h2>{{ flat.name }}</h2>
+        <p *ngIf="flat.city || flat.district || flat.street">
+          {{ flat.city }}, {{ flat.district }}, {{ flat.street }} {{ flat.buildingNumber }}/{{ flat.flatNumber }}
+        </p>
+        <p><strong>Liczba pokoi:</strong> {{ flat.rooms }}</p>
+        <p><strong>Powierzchnia:</strong> {{ flat.area }} m²</p>
+        <p><strong>Cena:</strong> {{ flat.price }} USD</p>
+        <p><strong>Kod pocztowy:</strong> {{ flat.postalCode }}</p>
+        <p><strong>Dostępność:</strong> {{ flat.isAvailable ? 'Dostępne' : 'Niedostępne' }}</p>
+
+        <div class="map-container" *ngIf="flat">
+          <div id="map" class="map"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flat-description" *ngIf="flat.description">
+      <h3>Opis</h3>
+      <p>{{ flat.description }}</p>
+    </div>
+
+    <div class="views">
+      <strong>Wyświetlenia:</strong> {{ flat.visitCount ?? 0 }}
+    </div>
+  </mat-card>
 </div>
-
-<!-- <div class="photo-gallery" *ngIf="flatPhotosUrls && flatPhotosUrls.length > 0; else noPhotos">
-  <h3>Zdjęcia mieszkania</h3>
-  <div class="photo-grid">
-    <img *ngFor="let photoUrl of flatPhotosUrls" [src]="photoUrl" alt="Flat photo" class="photo" />
-  </div>
-</div>
-
-<ng-template #noPhotos>
-  <p>Brak zdjęć do wyświetlenia.</p>
-</ng-template> -->

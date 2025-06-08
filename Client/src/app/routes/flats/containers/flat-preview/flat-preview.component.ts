@@ -21,6 +21,8 @@ export class FlatPreviewComponent implements OnInit {
   flat$!: Observable<Flat | undefined>;
   flat!: Flat| undefined;
 
+  private map: L.Map | undefined;
+
   constructor(private store: Store<AppState>, private route: ActivatedRoute) {
     this.selectPhotos();
     this.selectFlat();
@@ -33,6 +35,36 @@ export class FlatPreviewComponent implements OnInit {
     this.dispatchPhotos();
     this.dispatchFlat();
   }
+
+  private async loadMap(flat: Flat) {
+    if (!flat || !flat.city || !flat.street || typeof window === 'undefined') return;
+
+    const address = `${flat.street} ${flat.buildingNumber ?? ''}, ${flat.city}`;
+    const query = encodeURIComponent(address);
+
+    const L = await import('leaflet');
+
+    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}`)
+      .then(res => res.json())
+      .then((data) => {
+        if (!data || data.length === 0) return;
+        const { lat, lon } = data[0];
+
+        if (this.map) {
+          this.map.remove();
+        }
+
+        this.map = L.map('map').setView([lat, lon], 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(this.map);
+
+        L.marker([lat, lon]).addTo(this.map)
+          .bindPopup(flat.name ?? 'Mieszkanie')
+          .openPopup();
+      });
+  }
+
 
   private selectPhotos() {
     this.flatPhotosUrls$ = this.store.select(getFlatPhotosUrlsSelector);
@@ -51,6 +83,9 @@ export class FlatPreviewComponent implements OnInit {
   private subscribeFlat() {
     this.flat$.subscribe(res => {
       this.flat = res;
+      if(this.flat) {
+        this.loadMap(this.flat);
+      }
     });
   }
 
