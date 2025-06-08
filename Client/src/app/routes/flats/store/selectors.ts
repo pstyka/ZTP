@@ -7,3 +7,8 @@ export const getFlatsSelector = createSelector(
     selectFeature, 
     (state) => state.flats
 );
+
+export const getFlatPhotosUrlsSelector = createSelector(
+    selectFeature, 
+    (state) => state.flatPhotosUrls
+);

@@ -1,4 +1,5 @@
 export interface Flat {
+    id?: string;
     name?: string;
     description?: string;
     city?: string;
@@ -11,4 +12,5 @@ export interface Flat {
     area?: number;
     price?: number;
     isAvailable?: boolean;
+    visitCount?: number;
 }
