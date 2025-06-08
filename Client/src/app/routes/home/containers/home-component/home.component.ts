@@ -34,8 +34,7 @@ export class HomeComponent implements OnInit{
   }
 
   goToFlat(flat: Flat): void {
-    console.log(flat);
-    // this.router.navigate(['/flats/preview', id]);
+    this.router.navigate(['/flats/preview', flat?.id]);
   }
 
   private selectFlats() {
