@@ -1,1 +1,10 @@
-<p>flat-preview works!</p>
+<div class="photo-gallery" *ngIf="flatPhotosUrls && flatPhotosUrls.length > 0; else noPhotos">
+  <h3>Zdjęcia mieszkania</h3>
+  <div class="photo-grid">
+    <img *ngFor="let photoUrl of flatPhotosUrls" [src]="photoUrl" alt="Flat photo" class="photo" />
+  </div>
+</div>
+
+<ng-template #noPhotos>
+  <p>Brak zdjęć do wyświetlenia.</p>
+</ng-template>

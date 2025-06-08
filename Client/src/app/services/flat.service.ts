@@ -37,4 +37,10 @@ export class FlatService {
             catchError(error => throwError(() => error))
         );
     }
+
+    public getPhotos(id: string) {
+        return this.httpClient.get<string[]>(`${environment.apiUrlTmp}/rest/flats/${id}/photos`).pipe(
+            catchError((error) => throwError(() => error))
+        );
+    }
 }

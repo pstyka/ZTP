@@ -67,4 +67,19 @@ export class FlatEffects {
             })
         )
     );
+
+    getFlatPhotos$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(FlatActions.getFlatPhotos),
+            mergeMap((action) => {
+                return this.flatService.getPhotos(action.id).pipe(
+                    map((res) => FlatActions.getFlatPhotosSuccess({urls: res})),
+                    catchError((error) => {
+                        return of(FlatActions.getFlatPhotosFailure({ error: error.message }));
+                    }
+                    )
+                );
+            })
+        )
+    );
 }

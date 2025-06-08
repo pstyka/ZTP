@@ -45,3 +45,18 @@ export const getFlatsFailure = createAction(
     `${prefix} Get Flats Failure`,
     props<{ error: string }>()
 );
+
+export const getFlatPhotos = createAction(
+    `${prefix} Get Flat Photos`,
+    props<{ id: string }>()
+);
+
+export const getFlatPhotosSuccess = createAction(
+    `${prefix} Get Flats Photos Success`,
+    props<{ urls: string[] }>()
+);
+
+export const getFlatPhotosFailure = createAction(
+    `${prefix} Get Flats Photos Failure`,
+    props<{ error: string }>()
+);
