@@ -63,3 +63,18 @@ async def read_users_me(
         )
 
     return user
+
+@router.get("/{user_id}", status_code=status.HTTP_200_OK)
+async def read_users_me(
+    user_id: str,
+    _: Request,
+    db: Database,
+):
+    user = user_repository.get_by_id(db, user_id)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found",
+        )
+
+    return user
