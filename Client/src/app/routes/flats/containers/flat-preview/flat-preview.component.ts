@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { commonImports, materialImports } from '../../../../core';
 import { environment } from '../../../../../environment';
 import { Flat } from '../../../../models/flat';
+import { getIsLoggedInSelector } from '../../../../auth/store';
 
 @Component({
   selector: 'app-flat-preview',
@@ -20,14 +21,18 @@ export class FlatPreviewComponent implements OnInit {
   flatPhotosUrls!: string[] | undefined;
   flat$!: Observable<Flat | undefined>;
   flat!: Flat| undefined;
+  isLoggedIn$!: Observable<boolean | undefined>;
+  isLoggedIn!: boolean | undefined;
 
   private map: L.Map | undefined;
 
   constructor(private store: Store<AppState>, private route: ActivatedRoute) {
     this.selectPhotos();
     this.selectFlat();
+    this.selectIsLoggedIn();
     this.subscribePhotos();
     this.subscribeFlat();
+    this.subscribeIsLoggedIn();
   }
 
   ngOnInit(): void {
@@ -74,6 +79,10 @@ export class FlatPreviewComponent implements OnInit {
     this.flat$ = this.store.select(getFlatSelector);
   }
 
+  private selectIsLoggedIn(): void {
+    this.isLoggedIn$ = this.store.select(getIsLoggedInSelector);
+  }
+
   private subscribePhotos() {
     this.flatPhotosUrls$.subscribe(res => {
       this.flatPhotosUrls = res?.map(url => `${environment.apiUrlTmp}${url}`);
@@ -86,6 +95,13 @@ export class FlatPreviewComponent implements OnInit {
       if(this.flat) {
         this.loadMap(this.flat);
       }
+    });
+  }
+
+
+  private subscribeIsLoggedIn(): void {
+    this.isLoggedIn$.subscribe(res => {this.isLoggedIn = res
+      console.log(res);
     });
   }
 

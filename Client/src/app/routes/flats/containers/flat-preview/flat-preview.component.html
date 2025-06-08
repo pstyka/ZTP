@@ -18,7 +18,7 @@
           <p><strong>Postal code:</strong> {{ flat.postalCode }}</p>
         </div>
 
-        <div class="message">
+        <div *ngIf="isLoggedIn == true" class="message">
            <button mat-raised-button color="primary" class="full-width-button" type="submit">Send message</button>
         </div>
 
