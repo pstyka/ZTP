@@ -1,13 +1,16 @@
 import { inject, Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { catchError, map, mergeMap, of } from "rxjs";
-import { FlatService } from "../../../services";
+import { FlatService, NotificationService } from "../../../services";
 import { FlatActions } from ".";
+import { Router } from "@angular/router";
 
 @Injectable()
 export class FlatEffects {
     private actions$ = inject(Actions);
     private flatService = inject(FlatService);
+    private notificationService = inject(NotificationService);
+    private router = inject(Router);
 
     addFlat$ = createEffect(() =>
         this.actions$.pipe(
@@ -22,6 +25,17 @@ export class FlatEffects {
                 );
             })
         )
+    );
+
+    onAddFlatSuccess$ = createEffect(
+        () =>
+            this.actions$.pipe(
+            ofType(FlatActions.addFlatSuccess),
+            map((token) => {
+                this.notificationService.success("Flat has been added.");
+            })
+            ),
+        { dispatch: false }
     );
 
     getFlats$ = createEffect(() =>

@@ -19,24 +19,42 @@ export class AddFlatComponent {
   
   constructor(private fb: FormBuilder, private store: Store<AppState>) {
     this.form = this.fb.group({
-    name: ['', Validators.required],
-    description: [''],
-    city: [''],
-    district: [''],
-    street: [''],
-    buildingNumber: [''],
-    flatNumber: [''],
-    postalCode: [''],
-    rooms: [1],
-    area: [0.0],
-    price: [0.0],
-    isAvailable: [true]
-  });
+      name: ['', Validators.required],
+      description: [''],
+      city: [''],
+      district: [''],
+      street: [''],
+      buildingNumber: [''],
+      flatNumber: [''],
+      postalCode: [''],
+      rooms: [1],
+      area: [0.0],
+      price: [0.0],
+      isAvailable: [true]
+    });
   }
 
   submit() {
     if (this.form.valid) {
       this.store.dispatch(FlatActions.addFlat({ flat: this.form.value as Flat }));
+      this.resetForm();
     }
+  }
+
+  resetForm() {
+    this.form.patchValue({
+      name: [''],
+      description: [''],
+      city: [''],
+      district: [''],
+      street: [''],
+      buildingNumber: [''],
+      flatNumber: [''],
+      postalCode: [''],
+      rooms: [1],
+      area: [0.0],
+      price: [0.0],
+      isAvailable: [true]
+    });
   }
 }
