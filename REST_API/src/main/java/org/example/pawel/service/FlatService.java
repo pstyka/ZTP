@@ -10,6 +10,7 @@ import org.example.pawel.repository.FlatPhotoRepository;
 import org.example.pawel.repository.FlatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,10 +42,11 @@ public class FlatService {
 
 
     public List<FlatDTO> getAllFlats() {
-        return flatRepository.findAll().stream()
-                .map(flat -> flatDTOMapper.mapToDTO(flat))
+        return flatRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt")).stream()
+                .map(flatDTOMapper::mapToDTO)
                 .toList();
     }
+
 
     public List<FlatDTO> searchFlats(String city, Integer rooms, Double minPrice, Double maxPrice,
                                      Boolean isAvailable, Double minArea, Double maxArea) {
@@ -63,20 +65,21 @@ public class FlatService {
     public UUID addFlat(FlatDTO dto) {
         Flat flat = flatDTOMapper.mapToEntity(dto);
         flat.setVisitCount(0L);
+        flat.setCreatedAt(new java.sql.Timestamp(System.currentTimeMillis()));
         flatRepository.save(flat);
         return flat.getId();
     }
 
     public UUID addFlatWithPhotos(FlatDTO flatDTO, List<MultipartFile> files) {
         Flat flat = flatDTOMapper.mapToEntity(flatDTO);
-        Flat savedFlat = flatRepository.save(flat); // najpierw zapisujemy mieszkanie
+        Flat savedFlat = flatRepository.save(flat);
 
         List<FlatPhoto> photos = files.stream().map(file -> {
             try {
                 String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
                 Path filePath = Paths.get(uploadDir, fileName);
 
-                Files.createDirectories(filePath.getParent()); // utwórz folder, jeśli nie istnieje
+                Files.createDirectories(filePath.getParent());
                 Files.write(filePath, file.getBytes());
 
                 String photoUrl = "/uploads/" + fileName;
@@ -115,6 +118,7 @@ public class FlatService {
         flat.setArea(flatDTO.getArea());
         flat.setPrice(flatDTO.getPrice());
         flat.setIsAvailable(flatDTO.getIsAvailable());
+        flat.setUpdatedAt(new java.sql.Timestamp(System.currentTimeMillis()));
 
         Flat updated = flatRepository.save(flat);
         return flatDTOMapper.mapToDTO(updated);
