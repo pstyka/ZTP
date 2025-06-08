@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,6 +34,8 @@ public class Flat {
     private Double area;
     private Double price;
     private Boolean isAvailable;
+    private Timestamp createdAt;
+    private Timestamp updatedAt;
 
     @Column(nullable = false)
     private Long visitCount = 0L;

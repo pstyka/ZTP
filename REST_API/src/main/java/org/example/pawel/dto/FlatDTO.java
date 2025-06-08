@@ -2,6 +2,7 @@ package org.example.pawel.dto;
 
 import lombok.*;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,5 +26,7 @@ public class FlatDTO {
     private Double price;
     private Boolean isAvailable;
     private Long visitCount;
+    private Timestamp createdAt;
+    private Timestamp updatedAt;
 
 }

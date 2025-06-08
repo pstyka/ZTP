@@ -32,11 +32,13 @@ public class FlatDTOMapper {
                 .price(flat.getPrice())
                 .isAvailable(flat.getIsAvailable())
                 .visitCount(flat.getVisitCount())
+                .createdAt(flat.getCreatedAt())
+                .updatedAt(flat.getUpdatedAt())
                 .build();
     }
 
     public Flat mapToEntity(FlatDTO dto) {
-        Flat flat = Flat.builder()
+        return Flat.builder()
                 .name(dto.getName())
                 .description(dto.getDescription())
                 .city(dto.getCity())
@@ -50,9 +52,8 @@ public class FlatDTOMapper {
                 .price(dto.getPrice())
                 .isAvailable(dto.getIsAvailable())
                 .visitCount(dto.getVisitCount())
+                .createdAt(dto.getCreatedAt())
+                .updatedAt(dto.getUpdatedAt())
                 .build();
-
-
-        return flat;
     }
 }

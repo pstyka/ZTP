@@ -35,7 +35,6 @@ public class FlatPhotosService {
                 String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
                 Path filePath = Paths.get(uploadDir, fileName);
 
-                // Utwórz folder, jeśli nie istnieje
                 Files.createDirectories(filePath.getParent());
                 Files.write(filePath, file.getBytes());
 
