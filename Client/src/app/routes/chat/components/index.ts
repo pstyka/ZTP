@@ -1,0 +1,1 @@
+export * from './send-message-dialog/send-message-dialog.component';

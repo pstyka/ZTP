@@ -8,6 +8,9 @@ import { commonImports, materialImports } from '../../../../core';
 import { environment } from '../../../../../environment';
 import { Flat } from '../../../../models/flat';
 import { getIsLoggedInSelector } from '../../../../auth/store';
+import { MatDialog } from '@angular/material/dialog';
+import { SendMessageDialogComponent } from '../../../chat/components';
+
 
 @Component({
   selector: 'app-flat-preview',
@@ -26,7 +29,7 @@ export class FlatPreviewComponent implements OnInit {
 
   private map: L.Map | undefined;
 
-  constructor(private store: Store<AppState>, private route: ActivatedRoute) {
+  constructor(private store: Store<AppState>, private route: ActivatedRoute, private dialog: MatDialog) {
     this.selectPhotos();
     this.selectFlat();
     this.selectIsLoggedIn();
@@ -70,6 +73,16 @@ export class FlatPreviewComponent implements OnInit {
       });
   }
 
+  openMessageDialog() {
+      this.dialog.open(SendMessageDialogComponent, {
+        width: '500px',
+        data: { flatId: this.flatId }
+      }).afterClosed().subscribe(result => {
+        if (result) {
+          console.log('Wysłana wiadomość:', result);
+        }
+      });
+  }
 
   private selectPhotos() {
     this.flatPhotosUrls$ = this.store.select(getFlatPhotosUrlsSelector);
@@ -100,8 +113,8 @@ export class FlatPreviewComponent implements OnInit {
 
 
   private subscribeIsLoggedIn(): void {
-    this.isLoggedIn$.subscribe(res => {this.isLoggedIn = res
-      console.log(res);
+    this.isLoggedIn$.subscribe(res => {
+      this.isLoggedIn = res
     });
   }
 
