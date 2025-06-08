@@ -7,7 +7,7 @@
 
       <div class="flat-details">
         <div class="info">
-          <p>Posted: {{ flat.createdAt | date: 'dd.MM.yyyy, HH:mm' }}</p>
+          <p class="posted">Posted: {{ flat.createdAt | date: 'dd.MM.yyyy, HH:mm' }}</p>
           <h2>{{ flat.name }}</h2>
           <p *ngIf="flat.city || flat.district || flat.street">
             {{ flat.city }}, {{ flat.district }}, {{ flat.street }} {{ flat.buildingNumber }}/{{ flat.flatNumber }}
