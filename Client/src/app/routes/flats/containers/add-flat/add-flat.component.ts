@@ -24,16 +24,16 @@ export class AddFlatComponent implements OnDestroy{
   constructor(private fb: FormBuilder, private store: Store<AppState>, private actions$: Actions) {
     this.form = this.fb.group({
       name: ['', Validators.required],
-      description: [''],
-      city: [''],
+      description: ['', Validators.required],
+      city: ['', Validators.required],
       district: [''],
-      street: [''],
-      buildingNumber: [''],
+      street: ['', Validators.required],
+      buildingNumber: ['', Validators.required],
       flatNumber: [''],
-      postalCode: [''],
-      rooms: [1],
-      area: [0.0],
-      price: [0.0],
+      postalCode: ['', Validators.required],
+      rooms: [1, Validators.required],
+      area: [0.0, Validators.required],
+      price: [0.0, Validators.required],
       isAvailable: [true]
     });
 

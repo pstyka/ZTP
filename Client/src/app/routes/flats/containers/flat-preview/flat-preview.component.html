@@ -7,17 +7,23 @@
 
       <div class="flat-details">
         <div class="info">
+          <p>Posted: {{ flat.createdAt | date: 'dd.MM.yyyy, HH:mm' }}</p>
           <h2>{{ flat.name }}</h2>
           <p *ngIf="flat.city || flat.district || flat.street">
             {{ flat.city }}, {{ flat.district }}, {{ flat.street }} {{ flat.buildingNumber }}/{{ flat.flatNumber }}
           </p>
-          <p><strong>Liczba pokoi:</strong> {{ flat.rooms }}</p>
-          <p><strong>Powierzchnia:</strong> {{ flat.area }} m²</p>
-          <p><strong>Cena:</strong> {{ flat.price }} USD</p>
-          <p><strong>Kod pocztowy:</strong> {{ flat.postalCode }}</p>
-          <p><strong>Dostępność:</strong> {{ flat.isAvailable ? 'Dostępne' : 'Niedostępne' }}</p>
+          <p><strong>Rooms:</strong> {{ flat.rooms }}</p>
+          <p><strong>Area:</strong> {{ flat.area }} m²</p>
+          <p><strong>Price:</strong> {{ flat.price }} USD</p>
+          <p><strong>Postal code:</strong> {{ flat.postalCode }}</p>
         </div>
 
+        <div class="message">
+           <button mat-raised-button color="primary" class="full-width-button" type="submit">Send message</button>
+        </div>
+
+
+        <h2>Location</h2>
         <div class="map-container" *ngIf="flat">
           <div id="map" class="map"></div>
         </div>
@@ -25,12 +31,12 @@
     </div>
 
     <div class="flat-description" *ngIf="flat.description">
-      <h3>Opis</h3>
+      <h3>Description</h3>
       <p>{{ flat.description }}</p>
     </div>
 
     <div class="views">
-      <strong>Wyświetlenia:</strong> {{ flat.visitCount ?? 0 }}
+        <strong>Views:</strong> {{ flat.visitCount ?? 0 }}
     </div>
   </mat-card>
 </div>
