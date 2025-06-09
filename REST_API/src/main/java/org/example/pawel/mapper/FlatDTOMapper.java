@@ -6,7 +6,6 @@ import org.example.pawel.entity.Flat;
 import org.example.pawel.entity.FlatPhoto;
 import org.example.pawel.repository.FlatPhotoRepository;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
