@@ -18,26 +18,25 @@ public class User {
     @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
 
-    @Column(name = "first_name", nullable = false, length = 100)
+    @Column(name = "first_name")
     private String firstName;
 
-    @Column(name = "last_name", nullable = false, length = 100)
+    @Column(name = "last_name")
     private String lastName;
 
-    @Column(nullable = false, unique = true, length = 255)
+    @Column(nullable = false)
     private String email;
 
     @Column(length = 20)
     private String phone;
 
-    @Column(name = "password_hash", nullable = false, length = 255)
+    @Column(name = "password_hash")
     private String passwordHash;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private UserRole role;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at")
     private Timestamp createdAt;
 
     @PrePersist
