@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { Flat } from '../../../../models/flat';
 import { Router } from '@angular/router';
 import { environment } from '../../../../../environment';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
@@ -15,15 +16,17 @@ import { environment } from '../../../../../environment';
   styleUrls: ['../../../../../styles.scss', './home.component.scss']
 })
 export class HomeComponent implements OnInit{
+  filterForm!: FormGroup;
   flats$!: Observable<Flat[] | undefined>;
   flats!: Flat[] | undefined;
 
-  constructor(private store: Store<AppState>, private router: Router) {
+  constructor(private store: Store<AppState>, private router: Router, private fb: FormBuilder) {
     this.selectFlats();
     this.subscribeFlats();
   }
 
   ngOnInit(): void {
+    this.initFilterForm();
     this.dispatchFlats();
   }
 
@@ -40,6 +43,34 @@ export class HomeComponent implements OnInit{
 
   mapPhoto(url: string | undefined) {
       return `${environment.apiUrlTmp}${url}`;
+  }
+
+  initFilterForm() {
+    this.filterForm = this.fb.group({
+      city: [''],
+      rooms: [''],
+      minPrice: [''],
+      maxPrice: [''],
+      minArea: [''],
+      maxArea: ['']
+    });
+  }
+
+  applyFilters() {
+    console.log(this.filterForm.value);
+  }
+
+  clearFilters() {
+    this.filterForm.patchValue({
+      city: [''],
+      rooms: [''],
+      minPrice: [''],
+      maxPrice: [''],
+      minArea: [''],
+      maxArea: ['']
+    });
+
+    this.dispatchFlats();
   }
 
   private selectFlats() {
