@@ -47,6 +47,7 @@ public class DataInitializer implements CommandLineRunner {
                             String postalCode, int rooms, double area, double price, boolean available, String photoFileName) {
 
         Flat flat = Flat.builder()
+                .ownerId(UUID.randomUUID())
                 .name(name)
                 .description(desc)
                 .city(city)

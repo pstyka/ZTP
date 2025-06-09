@@ -21,6 +21,7 @@ public class Flat {
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(name = "id", columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
+    private UUID ownerId;
 
     private String name;
     private String description;
