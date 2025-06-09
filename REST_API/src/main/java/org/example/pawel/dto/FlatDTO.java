@@ -13,6 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class FlatDTO {
     private UUID id;
+    private UUID ownerId;
     private String name;
     private String description;
     private String city;
@@ -28,5 +29,7 @@ public class FlatDTO {
     private Long visitCount;
     private Timestamp createdAt;
     private Timestamp updatedAt;
+
+    private List<String> photos;
 
 }

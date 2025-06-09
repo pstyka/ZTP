@@ -104,4 +104,12 @@ public class FlatController {
         return ResponseEntity.ok(flatDTO);
     }
 
+    @Operation(summary = "Get flat by ownerID")
+    @GetMapping("/owner/{ownerId}")
+    public ResponseEntity<List<FlatDTO>> getFlatsByOwnerId(
+            @Parameter(description = "Owner ID to filter flats by owner") @PathVariable UUID ownerId) {
+        List<FlatDTO> flats = flatService.getFlatsByOwnerId(ownerId);
+        return ResponseEntity.ok(flats);
+    }
+
 }

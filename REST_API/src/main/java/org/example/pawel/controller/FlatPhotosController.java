@@ -1,5 +1,6 @@
 package org.example.pawel.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.example.pawel.service.FlatPhotosService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ public class FlatPhotosController {
 
     private final FlatPhotosService flatPhotoService;
 
+    @Operation(summary = "Upload photos for a flat", description = "Uploads photos for a specific flat.")
     @PostMapping("/{flatId}/photos")
     public ResponseEntity<Void> uploadPhotos(@PathVariable UUID flatId,
                                              @RequestParam("photos") List<MultipartFile> photos) {
@@ -27,6 +29,7 @@ public class FlatPhotosController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "Get photos by flatID", description = "Retrieves a photos for a specific flat.")
     @GetMapping("/{flatId}/photos")
     public ResponseEntity<List<String>> getPhotoUrls(@PathVariable UUID flatId) {
         return ResponseEntity.ok(flatPhotoService.getPhotoUrlsByFlatId(flatId));

@@ -39,14 +39,11 @@ public class FlatService {
     @Autowired
     private final FlatPhotoRepository flatPhotoRepository;
 
-
-
     public List<FlatDTO> getAllFlats() {
         return flatRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt")).stream()
                 .map(flatDTOMapper::mapToDTO)
                 .toList();
     }
-
 
     public List<FlatDTO> searchFlats(String city, Integer rooms, Double minPrice, Double maxPrice,
                                      Boolean isAvailable, Double minArea, Double maxArea) {
@@ -97,7 +94,6 @@ public class FlatService {
         return savedFlat.getId();
     }
 
-
     public void deleteFlat(UUID id) {
         flatRepository.deleteById(id);
     }
@@ -132,6 +128,12 @@ public class FlatService {
         flatRepository.save(flat);
 
         return flatDTOMapper.mapToDTO(flat);
+    }
+
+    public List<FlatDTO> getFlatsByOwnerId(UUID ownerId) {
+        return flatRepository.findByOwnerId(ownerId).stream()
+                .map(flatDTOMapper::mapToDTO)
+                .collect(Collectors.toList());
     }
 
 }
