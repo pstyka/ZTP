@@ -9,6 +9,7 @@ import requests
 from gateway.middleware.request_id import RequestIDMiddleware
 from gateway.proxy.users_router import router as proxy_users_router
 from gateway.proxy.rest_router import router as proxy_rest_router
+from gateway.proxy.chat_router import router as proxy_chat_router
 from gateway.auth.router import router as auth_router
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -65,6 +66,7 @@ async def get_root():
 
 app.include_router(proxy_users_router, prefix=settings.API_PREFIX)
 app.include_router(proxy_rest_router, prefix=settings.API_PREFIX)
+app.include_router(proxy_chat_router, prefix=settings.API_PREFIX)
 app.include_router(auth_router, prefix=settings.API_PREFIX)
 
 
