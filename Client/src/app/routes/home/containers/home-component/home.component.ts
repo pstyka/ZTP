@@ -6,6 +6,7 @@ import { FlatActions, getFlatsSelector } from '../../../flats/store';
 import { Observable } from 'rxjs';
 import { Flat } from '../../../../models/flat';
 import { Router } from '@angular/router';
+import { environment } from '../../../../../environment';
 
 @Component({
   selector: 'app-home',
@@ -35,6 +36,10 @@ export class HomeComponent implements OnInit{
 
   goToFlat(flat: Flat): void {
     this.router.navigate(['/flats/preview', flat?.id]);
+  }
+
+  mapPhoto(url: string | undefined) {
+      return `${environment.apiUrlTmp}${url}`;
   }
 
   private selectFlats() {
