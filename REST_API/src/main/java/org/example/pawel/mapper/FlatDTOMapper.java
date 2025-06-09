@@ -6,7 +6,6 @@ import org.example.pawel.entity.Flat;
 import org.example.pawel.entity.FlatPhoto;
 import org.example.pawel.repository.FlatPhotoRepository;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -19,6 +18,7 @@ public class FlatDTOMapper {
     public FlatDTO mapToDTO(Flat flat) {
         return FlatDTO.builder()
                 .id(flat.getId())
+                .ownerId(flat.getOwnerId())
                 .name(flat.getName())
                 .description(flat.getDescription())
                 .city(flat.getCity())
@@ -34,11 +34,16 @@ public class FlatDTOMapper {
                 .visitCount(flat.getVisitCount())
                 .createdAt(flat.getCreatedAt())
                 .updatedAt(flat.getUpdatedAt())
+                .photos(flat.getPhotos() != null ?
+                        flat.getPhotos().stream()
+                                .map(FlatPhoto::getUrl)
+                                .toList() : List.of())
                 .build();
     }
 
     public Flat mapToEntity(FlatDTO dto) {
         return Flat.builder()
+                .ownerId(dto.getOwnerId())
                 .name(dto.getName())
                 .description(dto.getDescription())
                 .city(dto.getCity())

@@ -2,27 +2,19 @@ package org.example.pawel.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.pawel.dto.FlatDTO;
-import org.example.pawel.entity.FlatPhoto;
 import org.example.pawel.service.FlatPhotosService;
 import org.example.pawel.service.FlatService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.net.URLConnection;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Tag(name = "Flats", description = "Operations related to managing rental flats")
@@ -102,6 +94,14 @@ public class FlatController {
     public ResponseEntity<FlatDTO> getFlat(@PathVariable UUID id) {
         FlatDTO flatDTO = flatService.getFlatById(id);
         return ResponseEntity.ok(flatDTO);
+    }
+
+    @Operation(summary = "Get flat by ownerID")
+    @GetMapping("/owner/{ownerId}")
+    public ResponseEntity<List<FlatDTO>> getFlatsByOwnerId(
+            @Parameter(description = "Owner ID to filter flats by owner") @PathVariable UUID ownerId) {
+        List<FlatDTO> flats = flatService.getFlatsByOwnerId(ownerId);
+        return ResponseEntity.ok(flats);
     }
 
 }
