@@ -10,6 +10,8 @@ import { Flat } from '../../../../models/flat';
 import { getIsLoggedInSelector } from '../../../../auth/store';
 import { MatDialog } from '@angular/material/dialog';
 import { SendMessageDialogComponent } from '../../../chat/components';
+import { Message } from '../../../../models/chat';
+import { ChatActions } from '../../../chat/store';
 
 
 @Component({
@@ -79,7 +81,11 @@ export class FlatPreviewComponent implements OnInit {
         data: { flatId: this.flatId }
       }).afterClosed().subscribe(result => {
         if (result) {
-          console.log('Wysłana wiadomość:', result);
+          const message: Message = {
+            receiver_id: this.flat?.ownerId,
+            content: result
+          } ;
+          this.store.dispatch(ChatActions.sendMessage({ message: message }));
         }
       });
   }

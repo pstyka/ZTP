@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { commonImports, materialImports } from '../../../../core';
+import { Message } from '../../../../models/chat';
 
 @Component({
   selector: 'app-send-message-dialog',
@@ -24,7 +25,7 @@ export class SendMessageDialogComponent {
 
   send(): void {
     if (this.messageForm.valid) {
-      const message = this.messageForm.value.message;
+      const message = this.messageForm.value.message as Message;
       this.dialogRef.close(message);
     }
   }
