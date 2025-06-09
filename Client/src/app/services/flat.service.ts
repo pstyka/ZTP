@@ -1,8 +1,8 @@
-import { HttpClient, HttpResponse } from "@angular/common/http";
+import { HttpClient, HttpParams, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { catchError, map, Observable, throwError } from "rxjs";
 import { environment } from "../../environment";
-import { Flat } from "../models/flat";
+import { Flat, FlatFilters } from "../models/flat";
 
 @Injectable({
     providedIn: 'root'
@@ -25,6 +25,20 @@ export class FlatService {
 
     public getFlats(): Observable<Flat[]> {
         return this.httpClient.get<Flat[]>(`${environment.apiUrlTmp}/rest/flats`).pipe(
+            catchError((error) => throwError(() => error))
+        );
+    }
+
+    public getSearchFlats(filters: FlatFilters): Observable<Flat[]> {
+        let params = new HttpParams();
+
+        Object.entries(filters).forEach(([key, value]) => {
+            if (value !== null && value !== undefined && value !== '') {
+                params = params.set(key, value.toString());
+            }
+        });
+
+        return this.httpClient.get<Flat[]>(`${environment.apiUrlTmp}/rest/flats/search`, { params }).pipe(
             catchError((error) => throwError(() => error))
         );
     }

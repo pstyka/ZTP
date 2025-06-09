@@ -34,6 +34,10 @@ export class SideNavComponent {
     this.router.navigate(['/flats/add'])
   }
 
+  goToChat() {
+    this.router.navigate(['/chat']);
+  }
+
   goToMyProfile() {
     this.router.navigate(['/my-profile']);
   }  

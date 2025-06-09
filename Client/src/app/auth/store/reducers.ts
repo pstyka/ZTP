@@ -1,6 +1,7 @@
 import { createReducer, on } from "@ngrx/store";
 import { AuthState } from "./auth.state";
 import { AuthActions } from ".";
+import { decodeJwt } from "../../utils";
 
 export const initialState: AuthState = {
     isLoggedIn: false,
@@ -14,28 +15,18 @@ export const reducer = createReducer(
     on(AuthActions.login, (state) => ({
         ...state,
         isLoggedIn: false,
-        token: undefined
+        token: undefined,
+        userId: undefined
     })),
-    on(AuthActions.loginSuccess, (state, action) => ({
+    on(AuthActions.loginSuccess, (state, action) => {
+        const payload = decodeJwt(action.token);
+        return {
         ...state,
         isLoggedIn: true,
-        token: action.token
-    })),
-    // on(AuthActions.loginSuccess, (state, action) => {
-    //     var decodedToken = jwtDecode(action.token) as DecodedToken;
-    //     return {
-    //         ...state,
-    //         isLoggedIn: true,
-    //         token: action.token,
-    //         username: decodedToken.username,
-    //         claims: decodedToken.claims,
-    //         exp: decodedToken.exp,
-    //         userId: decodedToken.userId,
-    //         // isAdmin: decodedToken.isAdmin === Claim.TRUE_VALUE,
-    //         rolesIds: decodedToken.rolesIds,
-    //         userGroupsIds: decodedToken.userGroupsIds
-    //     };
-    // }),
+        token: action.token,
+        userId: payload?.sub
+        };
+    }),
     on(AuthActions.loginFailure, (state, action) => ({
         ...state,
         isLoggedIn: false,
@@ -46,10 +37,14 @@ export const reducer = createReducer(
         isLoggedIn: false,
         token: undefined
     })),
-    on(AuthActions.setTokenSuccess, (state, action) => ({
+    on(AuthActions.setTokenSuccess, (state, action) => {
+        const payload = decodeJwt(action.token ?? '');
+        return {
         ...state,
         isLoggedIn: true,
-        token: action.token ?? undefined
-    }))
+        token: action.token ?? undefined,
+        userId: payload?.sub
+        };
+    }),
 );
 

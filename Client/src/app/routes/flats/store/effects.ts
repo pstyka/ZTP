@@ -53,6 +53,21 @@ export class FlatEffects {
         )
     );
 
+    getSearchFlats$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(FlatActions.getSearchFlats),
+            mergeMap((action) => {
+                return this.flatService.getSearchFlats(action.filters).pipe(
+                    map((res) => FlatActions.getSearchFlatsSuccess({ flats: res })),
+                    catchError((error) => {
+                        return of(FlatActions.getSearchFlatsFailure({ error: error.message }));
+                    }
+                    )
+                );
+            })
+        )
+    );
+
     addFlatPhotos$ = createEffect(() =>
         this.actions$.pipe(
             ofType(FlatActions.addFlatPhotos),

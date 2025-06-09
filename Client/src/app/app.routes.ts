@@ -3,6 +3,7 @@ import { ForgotPasswordComponent, LoginComponent, RegisterComponent } from './au
 import { HomeComponent } from './routes/home/containers';
 import { MyProfileComponent } from './routes/my-profile/containers';
 import { AddFlatComponent, FlatPreviewComponent } from './routes/flats/containers';
+import { ChatPageComponent } from './routes/chat/containers';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent},
@@ -11,5 +12,6 @@ export const routes: Routes = [
     { path: 'forgot-password', component: ForgotPasswordComponent},
     { path: 'my-profile', component: MyProfileComponent},
     { path: 'flats/add', component: AddFlatComponent },
-    { path: 'flats/preview/:id', component: FlatPreviewComponent }
+    { path: 'flats/preview/:id', component: FlatPreviewComponent },
+    { path: 'chat', component: ChatPageComponent},
 ];

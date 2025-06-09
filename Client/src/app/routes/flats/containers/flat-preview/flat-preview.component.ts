@@ -7,6 +7,12 @@ import { Observable } from 'rxjs';
 import { commonImports, materialImports } from '../../../../core';
 import { environment } from '../../../../../environment';
 import { Flat } from '../../../../models/flat';
+import { getIsLoggedInSelector } from '../../../../auth/store';
+import { MatDialog } from '@angular/material/dialog';
+import { SendMessageDialogComponent } from '../../../chat/components';
+import { Message } from '../../../../models/chat';
+import { ChatActions } from '../../../chat/store';
+
 
 @Component({
   selector: 'app-flat-preview',
@@ -20,14 +26,18 @@ export class FlatPreviewComponent implements OnInit {
   flatPhotosUrls!: string[] | undefined;
   flat$!: Observable<Flat | undefined>;
   flat!: Flat| undefined;
+  isLoggedIn$!: Observable<boolean | undefined>;
+  isLoggedIn!: boolean | undefined;
 
   private map: L.Map | undefined;
 
-  constructor(private store: Store<AppState>, private route: ActivatedRoute) {
+  constructor(private store: Store<AppState>, private route: ActivatedRoute, private dialog: MatDialog) {
     this.selectPhotos();
     this.selectFlat();
+    this.selectIsLoggedIn();
     this.subscribePhotos();
     this.subscribeFlat();
+    this.subscribeIsLoggedIn();
   }
 
   ngOnInit(): void {
@@ -65,6 +75,20 @@ export class FlatPreviewComponent implements OnInit {
       });
   }
 
+  openMessageDialog() {
+      this.dialog.open(SendMessageDialogComponent, {
+        width: '500px',
+        data: { flatId: this.flatId }
+      }).afterClosed().subscribe(result => {
+        if (result) {
+          const message: Message = {
+            receiver_id: this.flat?.ownerId,
+            content: result
+          } ;
+          this.store.dispatch(ChatActions.sendMessage({ message: message }));
+        }
+      });
+  }
 
   private selectPhotos() {
     this.flatPhotosUrls$ = this.store.select(getFlatPhotosUrlsSelector);
@@ -72,6 +96,10 @@ export class FlatPreviewComponent implements OnInit {
 
   private selectFlat() {
     this.flat$ = this.store.select(getFlatSelector);
+  }
+
+  private selectIsLoggedIn(): void {
+    this.isLoggedIn$ = this.store.select(getIsLoggedInSelector);
   }
 
   private subscribePhotos() {
@@ -86,6 +114,13 @@ export class FlatPreviewComponent implements OnInit {
       if(this.flat) {
         this.loadMap(this.flat);
       }
+    });
+  }
+
+
+  private subscribeIsLoggedIn(): void {
+    this.isLoggedIn$.subscribe(res => {
+      this.isLoggedIn = res
     });
   }
 

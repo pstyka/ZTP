@@ -1,5 +1,5 @@
 import { createAction, props } from "@ngrx/store";
-import { Flat } from "../../../models/flat";
+import { Flat, FlatFilters } from "../../../models/flat";
 
 const prefix = '[Flat]';
 
@@ -43,6 +43,21 @@ export const getFlatsSuccess = createAction(
 
 export const getFlatsFailure = createAction(
     `${prefix} Get Flats Failure`,
+    props<{ error: string }>()
+);
+
+export const getSearchFlats = createAction(
+    `${prefix} Get Search Flats`,
+    props<{ filters: FlatFilters }>()
+);
+
+export const getSearchFlatsSuccess = createAction(
+    `${prefix} Get Search Flats Success`,
+    props<{ flats: Flat[] }>()
+);
+
+export const getSearchFlatsFailure = createAction(
+    `${prefix} Get Search Flats Failure`,
     props<{ error: string }>()
 );
 

@@ -1,5 +1,6 @@
 export interface Flat {
     id?: string;
+    ownerId?: string;
     name?: string;
     description?: string;
     city?: string;
@@ -15,4 +16,5 @@ export interface Flat {
     visitCount?: number;
     createdAt?: string;
     updatedAt?: string;
+    photos?: string[];
 }
