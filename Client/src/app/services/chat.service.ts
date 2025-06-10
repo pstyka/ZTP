@@ -1,51 +1,54 @@
-import { HttpClient, HttpResponse } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { catchError, map, Observable, throwError } from "rxjs";
 import { environment } from "../../environment";
-import { Flat } from "../models/flat";
 import { Message } from "../models/chat";
+import { WebSocketSubject, webSocket } from 'rxjs/webSocket';
+import { Store } from "@ngrx/store";
+import { AppState } from "../store";
+import { getUserSelector } from "../routes/my-profile/store";
+import { getTokenSelector } from "../auth/store";
+import { decodeJwt } from "../utils";
 
 @Injectable({
     providedIn: 'root'
 })
 export class ChatService {
-    constructor(private httpClient: HttpClient) {
+    private socket$!: WebSocketSubject<any>;
+    private token$!: Observable<string | undefined>;
+    private userId: string | undefined;
+
+    constructor(private store: Store<AppState>, @Inject(PLATFORM_ID) private platformId: Object) {
+        this.selectToken();
+        this.subscribeToken();
     }
 
-    public send(message: Message) {
-        return this.httpClient.post<string>(`${environment.apiUrl}/chat/messages`, message).pipe(
-            catchError(error => throwError(() => error))
-        );
+    sendMessage(message: Message) {
+        this.socket$.next(message);
     }
 
-    // public getFlat(id: string): Observable<Flat> {
-    //     return this.httpClient.get<Flat>(`${environment.apiUrlTmp}/rest/flats/${id}`).pipe(
-    //         catchError((error) => throwError(() => error))
-    //     );
-    // }
+    getMessages(): Observable<any> {
+        return this.socket$.asObservable();
+    }
 
-    // public getFlats(): Observable<Flat[]> {
-    //     return this.httpClient.get<Flat[]>(`${environment.apiUrlTmp}/rest/flats`).pipe(
-    //         catchError((error) => throwError(() => error))
-    //     );
-    // }
+    closeConnection() {
+        this.socket$.complete();
+    }
 
-    // public addPhotos(id: string, photos: File[]) {
-    //     const formData = new FormData();
+    private selectToken() {
+        this.token$ = this.store.select(getTokenSelector);
+    }
 
-    //     photos.forEach(photo => {
-    //         formData.append('photos', photo);
-    //     });
+    private subscribeToken() {
+        this.token$.subscribe(token => {
+            if (token && isPlatformBrowser(this.platformId)) {
+            this.userId = decodeJwt(token);
+            this.initializeWebSocket();
+            }
+        });
+    }
 
-
-    //     return this.httpClient.post(`${environment.apiUrlTmp}/rest/flats/${id}/photos`, formData).pipe(
-    //         catchError(error => throwError(() => error))
-    //     );
-    // }
-
-    // public getPhotos(id: string) {
-    //     return this.httpClient.get<string[]>(`${environment.apiUrlTmp}/rest/flats/${id}/photos`).pipe(
-    //         catchError((error) => throwError(() => error))
-    //     );
-    // }
+    private initializeWebSocket() {
+        this.socket$ = webSocket(`ws://${environment.apiUrl}/chat/ws/${this.userId}`);
+    }
 }
