@@ -42,7 +42,8 @@ public class DataInitializer implements CommandLineRunner {
                     createUser("Marta", "Wiśniewska", "marta@example.com", "555444333"),
                     createUser("Tomasz", "Lewandowski", "tomek@example.com", "999888777"),
                     createUser("Kasia", "Mazur", "kasia@example.com", "112233445"),
-                    createUser("Adam", "Wójcik", "adam@example.com", "667788990")
+                    createUser("Adam", "Wójcik", "adam@example.com", "667788990"),
+                    createUser("Kuba", "Rodzeń", "kowalskipro6@gmail.com", "791020562")
                 );
             }
 
