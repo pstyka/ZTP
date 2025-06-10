@@ -26,7 +26,7 @@ async def websocket_endpoint(websocket: WebSocket, user_id: UUID, db: Session = 
                 continue
 
             if not receiver:
-                await websocket.send_text(json.dumps({"error": f"Receiver not found: {receiver_id}"}))
+                await websocket.send_text(json.dumps({"error": f"Receiver not found: {message_data['receiver_id']}"}))
                 continue
 
             db_message = Message(
