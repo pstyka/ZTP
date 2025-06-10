@@ -9,6 +9,8 @@ import org.example.pawel.repository.FlatPhotoRepository;
 import org.example.pawel.repository.FlatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,8 +45,20 @@ public class FlatService {
                 .toList();
     }
 
+    public Page<FlatDTO> getAllFlatsPaginated(Pageable pageable) {
+        return flatRepository.findAll(pageable)
+                .map(flatDTOMapper::mapToDTO);
+    }
+
     public List<FlatDTO> searchFlats(String city, Integer rooms, Double minPrice, Double maxPrice,
                                      Boolean isAvailable, Double minArea, Double maxArea) {
+        if (city == null && rooms == null && minPrice == null && maxPrice == null &&
+            isAvailable == null && minArea == null && maxArea == null) {
+            return flatRepository.findAll().stream()
+                    .map(flatDTOMapper::mapToDTO)
+                    .collect(Collectors.toList());
+        }
+
         return flatRepository.findAll().stream()
                 .filter(flat -> city == null || flat.getCity().equalsIgnoreCase(city))
                 .filter(flat -> rooms == null || flat.getRooms().equals(rooms))
@@ -53,7 +67,7 @@ public class FlatService {
                 .filter(flat -> isAvailable == null || flat.getIsAvailable().equals(isAvailable))
                 .filter(flat -> minArea == null || flat.getArea() >= minArea)
                 .filter(flat -> maxArea == null || flat.getArea() <= maxArea)
-                .map(flat -> flatDTOMapper.mapToDTO(flat))
+                .map(flatDTOMapper::mapToDTO)
                 .collect(Collectors.toList());
     }
 
