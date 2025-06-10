@@ -24,8 +24,7 @@ class UserRead(BaseModel):
 
 
 class MessageCreate(BaseModel):
-    sender: UUID
-    receiver: UUID
+    receiver_id: UUID
     content: str
 
 

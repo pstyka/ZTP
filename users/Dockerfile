@@ -14,4 +14,4 @@ COPY ./alembic ./alembic
 
 EXPOSE 8888
 
-CMD ["sh", "-c", "alembic upgrade head && uvicorn users.main:app --host 0.0.0.0 --port 8888 --log-level info"]
+CMD ["sh", "-c", "python -c 'from users.models import Base; from users.database import engine; Base.metadata.create_all(engine)' && uvicorn users.main:app --host 0.0.0.0 --port 8888 --log-level info"]

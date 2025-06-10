@@ -33,6 +33,7 @@ class Settings(BaseSettings):
         return {
             "frontend": self.FRONTEND_SERVICE_URL,
             "users": self.USER_SERVICE_URL,
+            "chat": self.USER_SERVICE_URL,
             "rest": self.REST_API_SERVICE_URL,
         }
 
