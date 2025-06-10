@@ -1,42 +1,40 @@
 <div class="main-container">
-  <!-- Filter Section -->
-  <form [formGroup]="filterForm" class="filter-bar">
-    <mat-form-field appearance="outline">
-      <mat-label>City</mat-label>
-      <input matInput formControlName="city">
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
-      <mat-label>Rooms</mat-label>
-      <input matInput type="number" formControlName="rooms" min="1">
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
-      <mat-label>Min price</mat-label>
-      <input matInput type="number" formControlName="minPrice" min="0">
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
-      <mat-label>max price</mat-label>
-      <input matInput type="number" formControlName="maxPrice">
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
-      <mat-label>Min area</mat-label>
-      <input matInput type="number" formControlName="minArea" min="0">
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
-      <mat-label>Max area</mat-label>
-      <input matInput type="number" formControlName="maxArea">
-    </mat-form-field>
-
-    <button mat-flat-button color="primary" class="filter-button" type="submit" (click)="applyFilters()">Search</button>
-    <button mat-flat-button color="primary" class="filter-button" type="submit" (click)="clearFilters()">Clear</button>
-  </form>
-
-  <!-- Main Section -->
   <mat-card>
+    <form [formGroup]="filterForm" class="filter-bar">
+      <mat-form-field appearance="outline">
+        <mat-label>City</mat-label>
+        <input matInput formControlName="city">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Rooms</mat-label>
+        <input matInput type="number" formControlName="rooms" min="1">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Min price</mat-label>
+        <input matInput type="number" formControlName="minPrice" min="0">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>max price</mat-label>
+        <input matInput type="number" formControlName="maxPrice">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Min area</mat-label>
+        <input matInput type="number" formControlName="minArea" min="0">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Max area</mat-label>
+        <input matInput type="number" formControlName="maxArea">
+      </mat-form-field>
+
+      <button mat-flat-button color="primary" class="filter-button" type="submit" (click)="applyFilters()">Search</button>
+      <button mat-flat-button color="primary" class="filter-button" type="submit" (click)="clearFilters()">Clear</button>
+    </form>
+
     <mat-list role="list">
       <mat-list-item *ngFor="let flat of flats" role="listitem" class="flat-item" (click)="goToFlat(flat)">
         <div class="flat-content">

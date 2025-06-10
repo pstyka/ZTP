@@ -87,7 +87,6 @@ export class FlatPreviewComponent implements OnInit {
             content: result
           } ;
           this.chatService.sendMessage(message);
-          // this.store.dispatch(ChatActions.sendMessage({ message: message }));
         }
       });
   }

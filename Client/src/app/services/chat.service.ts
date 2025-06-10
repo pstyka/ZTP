@@ -42,13 +42,14 @@ export class ChatService {
     private subscribeToken() {
         this.token$.subscribe(token => {
             if (token && isPlatformBrowser(this.platformId)) {
-            this.userId = decodeJwt(token);
+            var decodedToken = decodeJwt(token);
+            this.userId = decodedToken.sub;
             this.initializeWebSocket();
             }
         });
     }
 
     private initializeWebSocket() {
-        this.socket$ = webSocket(`ws://${environment.apiUrl}/chat/ws/${this.userId}`);
+        const ws = new WebSocket(`ws://${environment.usersUrl}${this.userId}`);
     }
 }
