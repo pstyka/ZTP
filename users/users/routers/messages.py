@@ -11,7 +11,7 @@ router = APIRouter(prefix="/chat", tags=["chat"])
 
 
 @router.websocket("/ws/{user_id}")
-async def websocket_endpoint(websocket: WebSocket, user_id: UUID, db: Session = Depends(get_db)):
+async def websocket_endpoint(websocket: WebSocket, user_id: str, db: Session = Depends(get_db)):
     await manager.connect(websocket, user_id)
     try:
         while True:
