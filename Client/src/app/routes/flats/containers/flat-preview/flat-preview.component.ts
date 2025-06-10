@@ -86,6 +86,7 @@ export class FlatPreviewComponent implements OnInit {
             receiver_id: this.flat?.ownerId,
             content: result
           } ;
+          
           this.chatService.sendMessage(message);
         }
       });

@@ -1,55 +1,52 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { catchError, map, Observable, throwError } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import { environment } from "../../environment";
 import { Message } from "../models/chat";
-import { WebSocketSubject, webSocket } from 'rxjs/webSocket';
 import { Store } from "@ngrx/store";
 import { AppState } from "../store";
-import { getUserSelector } from "../routes/my-profile/store";
 import { getTokenSelector } from "../auth/store";
 import { decodeJwt } from "../utils";
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class ChatService {
-    private socket$!: WebSocketSubject<any>;
-    private token$!: Observable<string | undefined>;
-    private userId: string | undefined;
+  private socket!: WebSocket;
+  private token!: string | null;
+  private userId: string | undefined;
+  private messageSubject = new Subject<Message>();
 
-    constructor(private store: Store<AppState>, @Inject(PLATFORM_ID) private platformId: Object) {
-        this.selectToken();
-        this.subscribeToken();
+  constructor(
+    private store: Store<AppState>
+  ) {
+    this.token = localStorage.getItem('token');
+    if(this.token) {
+        const decodedToken = decodeJwt(this.token);
+        this.userId = decodedToken.sub;
+        this.initializeWebSocket();
     }
+  }
 
-    sendMessage(message: Message) {
-        this.socket$.next(message);
+  sendMessage(message: Message): void {
+    if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+      this.socket.send(JSON.stringify(message));
     }
+  }
 
-    getMessages(): Observable<any> {
-        return this.socket$.asObservable();
-    }
+  getMessages(): Observable<Message> {
+    return this.messageSubject.asObservable();
+  }
 
-    closeConnection() {
-        this.socket$.complete();
+  closeConnection(): void {
+    if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+      this.socket.close();
     }
+  }
 
-    private selectToken() {
-        this.token$ = this.store.select(getTokenSelector);
-    }
-
-    private subscribeToken() {
-        this.token$.subscribe(token => {
-            if (token && isPlatformBrowser(this.platformId)) {
-            var decodedToken = decodeJwt(token);
-            this.userId = decodedToken.sub;
-            this.initializeWebSocket();
-            }
-        });
-    }
-
-    private initializeWebSocket() {
-        const ws = new WebSocket(`ws://${environment.usersUrl}${this.userId}`);
-    }
+  private initializeWebSocket(): void {
+    const wsUrl = `ws://${environment.usersUrl}${this.userId}`;
+    this.socket = new WebSocket(wsUrl);
+    console.log(this.socket);
+  }
 }
