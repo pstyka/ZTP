@@ -1,51 +1,120 @@
-import { HttpClient, HttpResponse } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { catchError, map, Observable, throwError } from "rxjs";
+import { Injectable } from '@angular/core';
+import { Observable, Subject } from "rxjs";
 import { environment } from "../../environment";
-import { Flat } from "../models/flat";
 import { Message } from "../models/chat";
+import { Store } from "@ngrx/store";
+import { AppState } from "../store";
+import { decodeJwt } from "../utils";
+import { getTokenSelector } from '../auth/store';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class ChatService {
-    constructor(private httpClient: HttpClient) {
+  private socket!: WebSocket;
+  private token$!: Observable<string | undefined>;
+  private userId: string | undefined;
+  private messageSubject = new Subject<Message>();
+
+  constructor(
+    private store: Store<AppState>,
+    private http: HttpClient
+  ) {
+    this.selectToken();
+    this.subscribeToken();
+  }
+
+  sendMessage(receiverId: string, content: string): void {
+    if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+      const messageData = {
+        receiver_id: receiverId,
+        content: content
+      };
+      this.socket.send(JSON.stringify(messageData));
+    } else {
+      console.error('WebSocket nie jest połączony');
     }
+  }
 
-    public send(message: Message) {
-        return this.httpClient.post<string>(`${environment.apiUrl}/chat/messages`, message).pipe(
-            catchError(error => throwError(() => error))
-        );
+  getMessages(): Observable<Message> {
+    return this.messageSubject.asObservable();
+  }
+
+  getConversationHistory(userId: string): Observable<Message[]> {
+    return this.http.get<Message[]>(`${environment.apiUrl}/chat/messages/${userId}`, {
+      headers: { 'X-User-ID': this.userId || '' }
+    });
+  }
+
+  getConversations(): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}/chat/conversations`, {
+      headers: { 'X-User-ID': this.userId || '' }
+    });
+  }
+
+  closeConnection(): void {
+    if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+      this.socket.close();
     }
+  }
 
-    // public getFlat(id: string): Observable<Flat> {
-    //     return this.httpClient.get<Flat>(`${environment.apiUrlTmp}/rest/flats/${id}`).pipe(
-    //         catchError((error) => throwError(() => error))
-    //     );
-    // }
+  reconnect(): void {
+    this.closeConnection();
+    this.connectWebSocket();
+  }
 
-    // public getFlats(): Observable<Flat[]> {
-    //     return this.httpClient.get<Flat[]>(`${environment.apiUrlTmp}/rest/flats`).pipe(
-    //         catchError((error) => throwError(() => error))
-    //     );
-    // }
+  isConnected(): boolean {
+    return this.socket && this.socket.readyState === WebSocket.OPEN;
+  }
 
-    // public addPhotos(id: string, photos: File[]) {
-    //     const formData = new FormData();
+  private connectWebSocket(): void {
+    if (!this.userId) return;
 
-    //     photos.forEach(photo => {
-    //         formData.append('photos', photo);
-    //     });
+    const wsUrl = `ws://${environment.usersUrl}${this.userId}`;
+    this.socket = new WebSocket(wsUrl);
 
+    this.socket.onopen = () => {
+      console.log('WebSocket połączony');
+    };
 
-    //     return this.httpClient.post(`${environment.apiUrlTmp}/rest/flats/${id}/photos`, formData).pipe(
-    //         catchError(error => throwError(() => error))
-    //     );
-    // }
+    this.socket.onclose = (event) => {
+      console.warn('WebSocket zamknięty', event);
+      setTimeout(() => this.reconnect(), 3000);
+    };
 
-    // public getPhotos(id: string) {
-    //     return this.httpClient.get<string[]>(`${environment.apiUrlTmp}/rest/flats/${id}/photos`).pipe(
-    //         catchError((error) => throwError(() => error))
-    //     );
-    // }
+    this.socket.onerror = (event) => {
+      console.error('WebSocket błąd', event);
+    };
+
+    this.socket.onmessage = (event) => {
+      try {
+        const message: Message = JSON.parse(event.data);
+        if (message.error) {
+          console.error('Błąd z serwera:', message.error);
+        } else {
+          this.messageSubject.next(message);
+        }
+      } catch (e) {
+        console.error('Błąd parsowania wiadomości:', e);
+      }
+    };
+  }
+
+  private selectToken() {
+    this.token$ = this.store.select(getTokenSelector);
+  }
+
+  private subscribeToken() {
+    this.token$.subscribe(token => {
+      if (token) {
+        const decodedToken = decodeJwt(token);
+        this.userId = decodedToken.sub;
+        console.log(this.userId);
+        this.connectWebSocket();
+      }
+    });
+  }
 }
+
+//chat/messages/{user_id} pobiera wszystkie wiadomości

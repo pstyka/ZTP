@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../../../store';
 import { FlatActions, getFlatsSelector } from '../../../flats/store';
 import { Observable } from 'rxjs';
-import { Flat } from '../../../../models/flat';
+import { Flat, FlatFilters } from '../../../../models/flat';
 import { Router } from '@angular/router';
 import { environment } from '../../../../../environment';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -57,7 +57,7 @@ export class HomeComponent implements OnInit{
   }
 
   applyFilters() {
-    console.log(this.filterForm.value);
+    this.store.dispatch(FlatActions.getSearchFlats({ filters: this.filterForm.value as FlatFilters }));
   }
 
   clearFilters() {

@@ -58,7 +58,7 @@ export class FlatEffects {
             ofType(FlatActions.getSearchFlats),
             mergeMap((action) => {
                 return this.flatService.getSearchFlats(action.filters).pipe(
-                    map((res) => FlatActions.getSearchFlatsSuccess({ flats: res })),
+                    map((res) => FlatActions.getFlatsSuccess({ flats: res })),
                     catchError((error) => {
                         return of(FlatActions.getSearchFlatsFailure({ error: error.message }));
                     }
