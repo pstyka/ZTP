@@ -18,6 +18,12 @@ async def websocket_endpoint(websocket: WebSocket, user_id: str, db: Session = D
             data = await websocket.receive_text()
             message_data = json.loads(data)
 
+            try:
+                user_count = db.query(User).count()
+                print(f"Total users in database: {user_count}")
+            except Exception as e:
+                print(f"Database connection error: {e}")
+
             print(f"Raw user_id: '{user_id}' (type: {type(user_id)})")
             print(f"Raw receiver_id: '{message_data['receiver_id']}' (type: {type(message_data['receiver_id'])})")
 
