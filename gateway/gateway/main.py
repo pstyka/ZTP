@@ -11,6 +11,7 @@ from gateway.proxy.users_router import router as proxy_users_router
 from gateway.proxy.rest_router import router as proxy_rest_router
 from gateway.proxy.chat_router import router as proxy_chat_router
 from gateway.auth.router import router as auth_router
+from gateway.middleware.rate_limit import configure_rate_limiter
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -23,7 +24,7 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
-
+# limiter = configure_rate_limiter(app)
 app.add_middleware(RequestIDMiddleware)
 
 app.add_middleware(

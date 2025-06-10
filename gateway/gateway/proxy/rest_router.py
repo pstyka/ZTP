@@ -8,7 +8,6 @@ logger = logging.getLogger("api_gateway.proxy.rest_router")
 
 router = APIRouter(prefix="/rest", tags=["rest"])
 
-# token_data: TokenData = Depends(verify_token)
 @router.api_route("/{path:path}", methods=["GET", "POST", "PUT", "PATCH", "DELETE"])
 async def rest_proxy(path: str, request: Request):
     method = request.method
