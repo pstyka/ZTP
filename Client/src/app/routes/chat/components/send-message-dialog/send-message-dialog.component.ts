@@ -1,8 +1,9 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { commonImports, materialImports } from '../../../../core';
 import { Message } from '../../../../models/chat';
+import { ChatService } from '../../../../services';
 
 @Component({
   selector: 'app-send-message-dialog',
@@ -16,6 +17,7 @@ export class SendMessageDialogComponent {
   constructor(
     private dialogRef: MatDialogRef<SendMessageDialogComponent>,
     private fb: FormBuilder,
+    private chatService: ChatService,
     @Inject(MAT_DIALOG_DATA) public data: { flatId: string }
   ) {
     this.messageForm = this.fb.group({
@@ -26,6 +28,8 @@ export class SendMessageDialogComponent {
   send(): void {
     if (this.messageForm.valid) {
       const message = this.messageForm.value.message as Message;
+      this.chatService.sendMessage(message);
+
       this.dialogRef.close(message);
     }
   }
