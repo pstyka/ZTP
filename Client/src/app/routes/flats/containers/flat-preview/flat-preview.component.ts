@@ -88,7 +88,10 @@ export class FlatPreviewComponent implements OnInit {
           } ;
 
           console.log("Send: ", message);
-          this.chatService.sendMessage(message);
+
+          if(message.receiver_id && message.content) {
+            this.chatService.sendMessage(message.receiver_id, message.content);
+          }
         }
       });
   }

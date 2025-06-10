@@ -1,11 +1,12 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable, Subject } from "rxjs";
 import { environment } from "../../environment";
 import { Message } from "../models/chat";
-import { select, Store } from "@ngrx/store";
+import { Store } from "@ngrx/store";
 import { AppState } from "../store";
 import { decodeJwt } from "../utils";
 import { getTokenSelector } from '../auth/store';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -17,20 +18,39 @@ export class ChatService {
   private messageSubject = new Subject<Message>();
 
   constructor(
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private http: HttpClient
   ) {
     this.selectToken();
     this.subscribeToken();
   }
 
-  sendMessage(message: Message): void {
+  sendMessage(receiverId: string, content: string): void {
     if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-      this.socket.send(JSON.stringify(message));
+      const messageData = {
+        receiver_id: receiverId,
+        content: content
+      };
+      this.socket.send(JSON.stringify(messageData));
+    } else {
+      console.error('WebSocket nie jest połączony');
     }
   }
 
   getMessages(): Observable<Message> {
     return this.messageSubject.asObservable();
+  }
+
+  getConversationHistory(userId: string): Observable<Message[]> {
+    return this.http.get<Message[]>(`${environment.apiUrl}/chat/messages/${userId}`, {
+      headers: { 'X-User-ID': this.userId || '' }
+    });
+  }
+
+  getConversations(): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}/chat/conversations`, {
+      headers: { 'X-User-ID': this.userId || '' }
+    });
   }
 
   closeConnection(): void {
@@ -44,29 +64,40 @@ export class ChatService {
     this.connectWebSocket();
   }
 
+  isConnected(): boolean {
+    return this.socket && this.socket.readyState === WebSocket.OPEN;
+  }
 
   private connectWebSocket(): void {
-    console.log("Start connecting");
+    if (!this.userId) return;
+
     const wsUrl = `ws://${environment.usersUrl}${this.userId}`;
     this.socket = new WebSocket(wsUrl);
-    console.log(this.socket);
 
     this.socket.onopen = () => {
-        console.log('WebSocket OPEN');
+      console.log('WebSocket połączony');
     };
 
     this.socket.onclose = (event) => {
-        console.warn('WebSocket CLOSED', event);
+      console.warn('WebSocket zamknięty', event);
+      setTimeout(() => this.reconnect(), 3000);
     };
 
     this.socket.onerror = (event) => {
-        console.error('WebSocket ERROR', event);
+      console.error('WebSocket błąd', event);
     };
 
     this.socket.onmessage = (event) => {
-        console.log(event);
+      try {
         const message: Message = JSON.parse(event.data);
-        this.messageSubject.next(message);
+        if (message.error) {
+          console.error('Błąd z serwera:', message.error);
+        } else {
+          this.messageSubject.next(message);
+        }
+      } catch (e) {
+        console.error('Błąd parsowania wiadomości:', e);
+      }
     };
   }
 
@@ -76,11 +107,12 @@ export class ChatService {
 
   private subscribeToken() {
     this.token$.subscribe(token => {
-        if(token) {
-            const decodedToken = decodeJwt(token);
-            this.userId = decodedToken.sub;
-            this.connectWebSocket();
-        }
+      if (token) {
+        const decodedToken = decodeJwt(token);
+        this.userId = decodedToken.sub;
+        console.log(this.userId);
+        this.connectWebSocket();
+      }
     });
   }
 }
