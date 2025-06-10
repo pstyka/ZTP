@@ -23,7 +23,6 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
-
 app.add_middleware(RequestIDMiddleware)
 
 app.add_middleware(

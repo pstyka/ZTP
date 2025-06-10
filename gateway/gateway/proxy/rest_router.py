@@ -8,9 +8,8 @@ logger = logging.getLogger("api_gateway.proxy.rest_router")
 
 router = APIRouter(prefix="/rest", tags=["rest"])
 
-# token_data: TokenData = Depends(verify_token)
 @router.api_route("/{path:path}", methods=["GET", "POST", "PUT", "PATCH", "DELETE"])
-async def rest_proxy(path: str, request: Request):
+async def rest_proxy(path: str, request: Request, token_data: TokenData = Depends(verify_token)):
     method = request.method
 
     body = None
@@ -21,10 +20,10 @@ async def rest_proxy(path: str, request: Request):
         service="rest",
         path=f"/rest/{path}",
         method=method,
-        # headers={
-        #     "X-User-ID": str(token_data.username),
-        #     "X-User-Roles": token_data.role
-        # },
+        headers={
+            "X-User-ID": str(token_data.username),
+            "X-User-Roles": token_data.role
+        },
         body=body
     )
 
