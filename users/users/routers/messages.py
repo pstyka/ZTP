@@ -7,6 +7,7 @@ from users.models import User, Message
 from users.schemas import MessageResponse, MessageCreate
 from users.utils.connection_manager import manager
 from uuid import UUID
+import uuid
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -16,31 +17,23 @@ router = APIRouter(prefix="/chat", tags=["chat"])
 
 @router.websocket("/ws/{user_id}")
 async def websocket_endpoint(websocket: WebSocket, user_id: str, db: Session = Depends(get_db)):
-    logger.info(f"=== WEBSOCKET START dla user_id: {user_id} ===")
-
     await manager.connect(websocket, user_id)
     try:
         while True:
             data = await websocket.receive_text()
+            print(f"Received data: {data}")
             message_data = json.loads(data)
+            print(f"Parsed message_data: {message_data}")
 
-            logger.info(f"Otrzymano: {message_data}")
+            try:
+                sender_uuid = uuid.UUID(user_id)
+                receiver_uuid = uuid.UUID(message_data['receiver_id'])
+            except ValueError as e:
+                await websocket.send_text(json.dumps({"error": f"Invalid UUID format: {e}"}))
+                continue
 
-            user_count = db.query(User).count()
-            logger.info(f"Liczba userow w bazie: {user_count}")
-
-            sender = db.query(User).filter(User.id == UUID(user_id)).first()
-            logger.info(f"Sender znaleziony: {sender is not None}")
-
-            if sender:
-                logger.info(f"Sender: {sender.first_name} {sender.last_name}")
-            else:
-                logger.error(f"SENDER NIE ZNALEZIONY dla UUID: {user_id}")
-                sample_users = db.query(User).limit(5).all()
-                logger.info(f"Przykladowi userzy: {[(str(u.id), u.first_name) for u in sample_users]}")
-
-            receiver = db.query(User).filter(User.id == UUID(message_data['receiver_id'])).first()
-            logger.info(f"Receiver znaleziony: {receiver is not None}")
+            sender = db.query(User).filter(User.id == sender_uuid).first()
+            receiver = db.query(User).filter(User.id == receiver_uuid).first()
 
             if not sender:
                 await websocket.send_text(json.dumps({"error": f"Sender not found: {user_id}"}))
@@ -51,8 +44,8 @@ async def websocket_endpoint(websocket: WebSocket, user_id: str, db: Session = D
                 continue
 
             db_message = Message(
-                sender_id=UUID(user_id),
-                receiver_id=UUID(message_data['receiver_id']),
+                sender_id=sender_uuid,
+                receiver_id=receiver_uuid,
                 content=message_data['content']
             )
             db.add(db_message)
@@ -69,14 +62,15 @@ async def websocket_endpoint(websocket: WebSocket, user_id: str, db: Session = D
                 "created_at": db_message.created_at.isoformat()
             }
 
-            await manager.send_message(response_data, str(message_data['receiver_id']))
+            await manager.send_message(response_data, str(receiver_uuid))
             await websocket.send_text(json.dumps(response_data))
 
     except WebSocketDisconnect:
         manager.disconnect(user_id)
-        logger.info(f"WebSocket disconnected for user: {user_id}")
+    except json.JSONDecodeError:
+        await websocket.send_text(json.dumps({"error": "Invalid JSON"}))
     except Exception as e:
-        logger.error(f"WebSocket error: {str(e)}")
+        print(f"Exception: {e}")
         await websocket.send_text(json.dumps({"error": str(e)}))
 
 
