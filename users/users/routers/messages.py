@@ -5,23 +5,28 @@ from users.database import get_db
 from users.models import User, Message
 from users.schemas import MessageResponse, MessageCreate
 from users.utils.connection_manager import manager
+from uuid import UUID
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 
 
 @router.websocket("/ws/{user_id}")
-async def websocket_endpoint(websocket: WebSocket, user_id: str, db: Session = Depends(get_db)):
+async def websocket_endpoint(websocket: WebSocket, user_id: UUID, db: Session = Depends(get_db)):
     await manager.connect(websocket, user_id)
     try:
         while True:
             data = await websocket.receive_text()
             message_data = json.loads(data)
 
-            sender = db.query(User).filter(User.id == user_id).first()
+            sender = db.query(User).filter(User.id == UUID(user_id)).first()
             receiver = db.query(User).filter(User.id == message_data['receiver_id']).first()
 
-            if not sender or not receiver:
-                await websocket.send_text(json.dumps({"error": "User not found"}))
+            if not sender:
+                await websocket.send_text(json.dumps({"error": f"Sender not found: {user_id}"}))
+                continue
+
+            if not receiver:
+                await websocket.send_text(json.dumps({"error": f"Receiver not found: {message_data['receiver_id']}"}))
                 continue
 
             db_message = Message(
