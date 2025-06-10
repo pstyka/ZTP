@@ -23,12 +23,11 @@ async def chat_proxy(path: str, request: Request, token_data: TokenData = Depend
 
     service_request = ServiceRequest(
         service="chat",
-        path=f"/{path}",
+        path=f"/chat/{path}",
         method=method,
         headers={
             "X-User-ID": str(token_data.username),
             "X-User-Roles": token_data.role,
-            "Content-Type": "application/json"
         },
         body=body
     )

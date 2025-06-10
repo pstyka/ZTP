@@ -1,11 +1,9 @@
-from uuid import UUID
-from fastapi import Depends, APIRouter, HTTPException, WebSocket, WebSocketDisconnect
+from fastapi import Depends, APIRouter, HTTPException, WebSocket, WebSocketDisconnect, Request
 from sqlalchemy.orm import Session
 from users.database import get_db
 from users.models import User, Message
 from users.schemas import MessageResponse, MessageCreate
 from users.utils.connection_manager import manager
-from users.utils.utils import get_current_user_id
 
 
 router = APIRouter(prefix="/chat", tags=["chat"])
@@ -13,6 +11,7 @@ router = APIRouter(prefix="/chat", tags=["chat"])
 
 @router.websocket("/ws/{user_id}")
 async def websocket_endpoint(websocket: WebSocket, user_id: str):
+    print(f"WebSocket connection established for user: {user_id}")
     await manager.connect(websocket, user_id)
     try:
         while True:
@@ -24,9 +23,10 @@ async def websocket_endpoint(websocket: WebSocket, user_id: str):
 @router.post("/messages", response_model=MessageResponse)
 async def send_message(
     message: MessageCreate,
+    request: Request,
     db: Session = Depends(get_db),
-    current_user_id: UUID = Depends(get_current_user_id)
 ):
+    current_user_id = request.headers.get("X-User-ID")
     sender = db.query(User).filter(User.id == current_user_id).first()
     receiver = db.query(User).filter(User.id == message.receiver_id).first()
 
@@ -72,10 +72,11 @@ async def send_message(
 
 @router.get("/messages/{user_id}", response_model=list[MessageResponse])
 async def get_conversation(
-    user_id: UUID,
+    user_id: str,
+    request: Request,
     db: Session = Depends(get_db),
-    current_user_id: UUID = Depends(get_current_user_id)
 ):
+    current_user_id = request.headers.get("X-User-ID")
     messages = db.query(Message).filter(
         ((Message.sender_id == current_user_id) & (Message.receiver_id == user_id)) |
         ((Message.sender_id == user_id) & (Message.receiver_id == current_user_id))
@@ -102,9 +103,10 @@ async def get_conversation(
 
 @router.get("/conversations", response_model=list[dict])
 async def get_conversations(
+    request: Request,
     db: Session = Depends(get_db),
-    current_user_id: UUID = Depends(get_current_user_id)
 ):
+    current_user_id = request.headers.get("X-User-ID")
     conversations = db.query(Message).filter(
         (Message.sender_id == current_user_id) | (Message.receiver_id == current_user_id)
     ).distinct().all()
