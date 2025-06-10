@@ -32,7 +32,7 @@ export class FlatPreviewComponent implements OnInit {
 
   private map: L.Map | undefined;
 
-  constructor(private store: Store<AppState>, private route: ActivatedRoute, private dialog: MatDialog) {
+  constructor(private store: Store<AppState>, private route: ActivatedRoute, private dialog: MatDialog, private chatService: ChatService) {
     this.selectPhotos();
     this.selectFlat();
     this.selectIsLoggedIn();
@@ -87,7 +87,8 @@ export class FlatPreviewComponent implements OnInit {
             content: result
           } ;
 
-          // this.chatService.sendMessage(message);
+          console.log("Send: ", message);
+          this.chatService.sendMessage(message);
         }
       });
   }

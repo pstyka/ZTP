@@ -17,7 +17,6 @@ export class SendMessageDialogComponent {
   constructor(
     private dialogRef: MatDialogRef<SendMessageDialogComponent>,
     private fb: FormBuilder,
-    private chatService: ChatService,
     @Inject(MAT_DIALOG_DATA) public data: { flatId: string }
   ) {
     this.messageForm = this.fb.group({
@@ -28,7 +27,6 @@ export class SendMessageDialogComponent {
   send(): void {
     if (this.messageForm.valid) {
       const message = this.messageForm.value.message as Message;
-      this.chatService.sendMessage(message);
 
       this.dialogRef.close(message);
     }
