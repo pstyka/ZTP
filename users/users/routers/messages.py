@@ -18,7 +18,7 @@ async def websocket_endpoint(websocket: WebSocket, user_id: UUID, db: Session = 
             data = await websocket.receive_text()
             message_data = json.loads(data)
 
-            sender = db.query(User).filter(User.id == UUID(user_id)).first()
+            sender = db.query(User).filter(User.id == user_id).first()
             receiver = db.query(User).filter(User.id == message_data['receiver_id']).first()
 
             if not sender:
