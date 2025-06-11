@@ -36,7 +36,6 @@ export class ChatPageComponent implements OnInit {
   private subscribeConversations() {
     this.conversations$.subscribe(res => {
       this.conversations = res;
-      console.log(res);
     })
   }
 
