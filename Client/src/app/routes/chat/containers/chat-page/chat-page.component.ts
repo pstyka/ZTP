@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { AppState } from '../../../../store';
 import { ChatActions, getConversationsSelector } from '../../store';
 import { commonImports, materialImports } from '../../../../core';
+import { Conversation } from '../../../../models/chat';
 
 @Component({
   selector: 'app-chat-page',
@@ -12,9 +13,9 @@ import { commonImports, materialImports } from '../../../../core';
   styleUrls: ['../../../../../styles.scss','./chat-page.component.scss']
 })
 export class ChatPageComponent implements OnInit {
-  conversations$!: Observable<any>;
-  conversations!: any;
-  selectedConversation!: any;
+  conversations$!: Observable<Conversation[]>;
+  conversations!: Conversation[];
+  selectedConversation!: Conversation;
   
   constructor(private store: Store<AppState>) {
     this.selectConversations();

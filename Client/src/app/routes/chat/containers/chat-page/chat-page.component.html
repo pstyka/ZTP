@@ -2,7 +2,7 @@
   <div class="chat-layout">
     <!-- Lewa kolumna: wiadomości -->
     <mat-card class="chat-card chat-window">
-        <mat-card-title>Rozmowa z {{ selectedConversation?.user_name || '...' }}</mat-card-title>
+        <mat-card-title *ngIf="selectedConversation">{{ selectedConversation?.user_name }}</mat-card-title>
         <div class="messages" *ngIf="selectedConversation; else emptyState">
             message
         <!-- <div *ngFor="let message of selectedConversation.messages" class="message">
@@ -10,13 +10,13 @@
         </div> -->
         </div>
         <ng-template #emptyState>
-        <p>Wybierz konwersację z listy.</p>
+        <p>Select chat</p>
         </ng-template>
     </mat-card>
 
     <!-- Prawa kolumna: lista konwersacji -->
     <mat-card class="chat-card conversation-list-card">
-        <mat-card-title>Konwersacje</mat-card-title>
+        <mat-card-title>Chats</mat-card-title>
         <ul class="conversation-list">
         <li *ngFor="let conversation of conversations" (click)="selectConversation(conversation)"
             [class.selected]="conversation === selectedConversation">
