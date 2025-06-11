@@ -115,8 +115,8 @@ mat-list {
 .filter-bar {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 1rem;
+  gap: 10px;
+  padding-bottom: 10px !important;
 
   mat-form-field {
     width: 140px;
@@ -129,6 +129,7 @@ mat-list {
 
 ::ng-deep mat-form-field {
   height: 40px;
+  background-color: white;
 
   .mat-mdc-text-field-wrapper {
     height: 40px;
