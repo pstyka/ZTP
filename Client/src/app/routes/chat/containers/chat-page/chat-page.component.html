@@ -1,3 +1,25 @@
 <div class="main-container">
-    <p>chat-page works!</p>
+    <div class="chat-page-container">
+    <div class="chat-window" *ngIf="selectedConversation">
+        <h4>Rozmowa z {{ selectedConversation.user_name }}</h4>
+        <div class="messages">
+            Messages
+        <!-- <div *ngFor="let message of selectedConversation.messages" class="message">
+            <strong>{{ message.sender }}:</strong> {{ message.content }}
+        </div> -->
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <h3>Konwersacje</h3>
+        <ul class="conversation-list">
+        <li *ngFor="let conversation of conversations" (click)="selectConversation(conversation)">
+            <div class="conversation-item" [class.selected]="conversation === selectedConversation">
+            <div class="user-name">{{ conversation.user_name }}</div>
+            <div class="last-message">{{ conversation.last_message }}</div>
+            </div>
+        </li>
+        </ul>
+    </div>
+    </div>
 </div>

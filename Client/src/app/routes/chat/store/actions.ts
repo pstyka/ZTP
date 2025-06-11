@@ -1,18 +1,32 @@
 import { createAction, props } from "@ngrx/store";
-import { Message } from "../../../models/chat";
+import { Conversation, Message } from "../../../models/chat";
 
 const prefix = '[Chat]';
 
-export const sendMessage = createAction(
-    `${prefix} Send Message`,
-    props<{ message: Message }>()
+// export const sendMessage = createAction(
+//     `${prefix} Send Message`,
+//     props<{ message: Message }>()
+// );
+
+// export const sendMessageSuccess = createAction(
+//     `${prefix} Send Message Success`
+// );
+
+// export const sendMessageFailure = createAction(
+//     `${prefix} Send Message Failure`,
+//     props<{ error: string }>()
+// );
+
+export const getConversations = createAction(
+    `${prefix} Get Conversations`
 );
 
-export const sendMessageSuccess = createAction(
-    `${prefix} Send Message Success`
+export const getConversationsSuccess = createAction(
+    `${prefix} Get Conversations Success`,
+    props<{ conversetions: Conversation[] }>()
 );
 
-export const sendMessageFailure = createAction(
-    `${prefix} Send Message Failure`,
+export const getConversationsFailure = createAction(
+    `${prefix} Get Conversations Failure`,
     props<{ error: string }>()
 );

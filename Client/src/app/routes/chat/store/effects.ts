@@ -7,20 +7,20 @@ import { ChatActions } from ".";
 @Injectable()
 export class ChatEffects {
     private actions$ = inject(Actions);
-    // private chatService = inject(ChatService);
+    private chatService = inject(ChatService);
 
-    // sendMessage$ = createEffect(() =>
-    //     this.actions$.pipe(
-    //         ofType(ChatActions.sendMessage),
-    //         mergeMap((action) => {
-    //             return this.chatService.send(action.message).pipe(
-    //                 map((res) => ChatActions.sendMessageSuccess()),
-    //                 catchError((error) => {
-    //                     return of(ChatActions.sendMessageFailure({ error: error.message }));
-    //                 }
-    //                 )
-    //             );
-    //         })
-    //     )
-    // );
+    getConversations$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(ChatActions.getConversations),
+            mergeMap((action) => {
+                return this.chatService.getConversations().pipe(
+                    map((res) => ChatActions.getConversationsSuccess({ conversetions: res })),
+                    catchError((error) => {
+                        return of(ChatActions.getConversationsFailure({ error: error.message }));
+                    }
+                    )
+                );
+            })
+        )
+    );
 }

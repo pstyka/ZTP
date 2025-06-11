@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from "rxjs";
 import { environment } from "../../environment";
-import { Message } from "../models/chat";
+import { Conversation, Message } from "../models/chat";
 import { Store } from "@ngrx/store";
 import { AppState } from "../store";
 import { decodeJwt } from "../utils";
@@ -48,7 +48,7 @@ export class ChatService {
   }
 
   getConversations(): Observable<any[]> {
-    return this.http.get<any[]>(`${environment.apiUrl}/chat/conversations`, {
+    return this.http.get<Conversation[]>(`${environment.apiUrl}/chat/conversations`, {
       headers: { 'X-User-ID': this.userId || '' }
     });
   }
@@ -108,10 +108,8 @@ export class ChatService {
   private subscribeToken() {
     this.token$.subscribe(token => {
       if (token) {
-        console.log(token);
         const decodedToken = decodeJwt(token);
         this.userId = decodedToken.sub;
-        console.log(this.userId);
         this.connectWebSocket();
       }
     });
