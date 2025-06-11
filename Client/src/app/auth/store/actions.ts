@@ -12,7 +12,7 @@ export const login = createAction(
 
 export const loginSuccess = createAction(
     `${prefix} Login Success`,
-    props<{ token: string; }>()
+    props<{ token: { access_token: string; token_type: string }; }>()
 );
 
 export const loginFailure = createAction(
@@ -44,7 +44,7 @@ export const setToken = createAction(
 
 export const setTokenSuccess = createAction(
     `${prefix} Set token Success`,
-    props<{ token: string | null}>()
+    props<{ token: { access_token: string; token_type: string } | null}>()
 );
 
 export const setTokenFailure = createAction(

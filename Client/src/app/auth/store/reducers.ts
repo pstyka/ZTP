@@ -19,12 +19,14 @@ export const reducer = createReducer(
         userId: undefined
     })),
     on(AuthActions.loginSuccess, (state, action) => {
-        const payload = decodeJwt(action.token);
+        const accessToken = action.token.access_token;
+        const payload = decodeJwt(accessToken);
+
         return {
-        ...state,
-        isLoggedIn: true,
-        token: action.token,
-        userId: payload?.sub
+            ...state,
+            isLoggedIn: true,
+            token: accessToken,
+            userId: payload?.sub
         };
     }),
     on(AuthActions.loginFailure, (state, action) => ({
@@ -38,13 +40,25 @@ export const reducer = createReducer(
         token: undefined
     })),
     on(AuthActions.setTokenSuccess, (state, action) => {
-        const payload = decodeJwt(action.token ?? '');
-        return {
-        ...state,
-        isLoggedIn: true,
-        token: action.token ?? undefined,
-        userId: payload?.sub
-        };
+        if(action.token) {
+            const payload = decodeJwt(action.token.access_token);
+            
+            return {
+                ...state,
+                isLoggedIn: true,
+                token: action.token.access_token,
+                userId: payload?.sub
+            };
+        } else {
+            return {
+                ...state,
+                isLoggedIn: true,
+                token: undefined,
+                userId: undefined
+            };
+        }
+
+        
     }),
 );
 

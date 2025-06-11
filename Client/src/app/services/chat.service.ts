@@ -108,6 +108,7 @@ export class ChatService {
   private subscribeToken() {
     this.token$.subscribe(token => {
       if (token) {
+        console.log(token);
         const decodedToken = decodeJwt(token);
         this.userId = decodedToken.sub;
         console.log(this.userId);
