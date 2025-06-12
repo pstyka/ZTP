@@ -23,6 +23,7 @@ export class AddFlatComponent implements OnDestroy{
   
   constructor(private fb: FormBuilder, private store: Store<AppState>, private actions$: Actions) {
     this.form = this.fb.group({
+      // ownerId: ['', Validators.required],
       name: ['', Validators.required],
       description: ['', Validators.required],
       city: ['', Validators.required],
@@ -53,6 +54,7 @@ export class AddFlatComponent implements OnDestroy{
 
   resetForm() {
     this.form.patchValue({
+      // ownerId: [''],
       name: [''],
       description: [''],
       city: [''],
