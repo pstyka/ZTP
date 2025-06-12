@@ -6,11 +6,11 @@ mat-card {
   display: flex;
   justify-content: center;
   padding: 24px;
+  height: 100%;
 }
 
 mat-card {
   width: 100%;
-  max-width: 700px;
   padding: 2rem;
   background-color: #f0f0f0;
   border-radius: 12px;
@@ -50,4 +50,8 @@ mat-card {
 
 .profile-details p {
   margin: 6px 0;
+}
+
+#my-listings {
+  margin-top: 16px;
 }

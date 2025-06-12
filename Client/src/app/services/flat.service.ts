@@ -29,6 +29,12 @@ export class FlatService {
         );
     }
 
+    public getFlatsByOwnerId(ownerId: string): Observable<Flat[]> {
+        return this.httpClient.get<Flat[]>(`${environment.apiUrlTmp}/rest/flats/owner/${ownerId}`).pipe(
+            catchError((error) => throwError(() => error))
+        );
+    }
+
     public getSearchFlats(filters: FlatFilters): Observable<Flat[]> {
         let params = new HttpParams();
 

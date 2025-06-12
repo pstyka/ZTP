@@ -112,4 +112,19 @@ export class FlatEffects {
             })
         )
     );
+
+    getFlatsByOwnerId$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(FlatActions.getFlatsByOwnerId),
+            mergeMap((action) => {
+                return this.flatService.getFlatsByOwnerId(action.ownerId).pipe(
+                    map((res) => FlatActions.getFlatsByOwnerIdSuccess({ flats: res })),
+                    catchError((error) => {
+                        return of(FlatActions.getFlatsByOwnerIdFailure({ error: error.message }));
+                    }
+                    )
+                );
+            })
+        )
+    );
 }

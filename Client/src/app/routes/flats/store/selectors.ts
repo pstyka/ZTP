@@ -17,3 +17,8 @@ export const getFlatSelector = createSelector(
     selectFeature,
     (state) => state.flat
 );
+
+export const getFlatsByOwnerIdSelector = createSelector(
+    selectFeature, 
+    (state) => state.ownerFlats
+);
