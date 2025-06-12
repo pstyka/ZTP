@@ -23,4 +23,19 @@ export class ChatEffects {
             })
         )
     );
+
+    getConversationHistory$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(ChatActions.getConversationHistory),
+            mergeMap((action) => {
+                return this.chatService.getConversationHistory(action.userId).pipe(
+                    map((res) => ChatActions.getConversationHistorySuccess({ conversationHistory: res })),
+                    catchError((error) => {
+                        return of(ChatActions.getConversationHistoryFailure({ error: error.message }));
+                    }
+                    )
+                );
+            })
+        )
+    );
 }

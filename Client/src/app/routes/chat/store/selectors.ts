@@ -8,10 +8,10 @@ export const getConversationsSelector = createSelector(
     (state) => state.conversations
 );
 
-// export const getFlatPhotosUrlsSelector = createSelector(
-//     selectFeature, 
-//     (state) => state.flatPhotosUrls
-// );
+export const getConversationHistorySelector = createSelector(
+    selectFeature, 
+    (state) => state.conversationHistory
+);
 
 // export const getFlatSelector = createSelector(
 //     selectFeature,

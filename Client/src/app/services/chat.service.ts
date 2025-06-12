@@ -41,13 +41,13 @@ export class ChatService {
     return this.messageSubject.asObservable();
   }
 
-  getConversationHistory(userId: string): Observable<Message[]> {
-    return this.http.get<Message[]>(`${environment.apiUrl}/chat/messages/${userId}`, {
+  getConversationHistory(userId: string): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/chat/messages/${userId}`, {
       headers: { 'X-User-ID': this.userId || '' }
     });
   }
 
-  getConversations(): Observable<any[]> {
+  getConversations(): Observable<Conversation[]> {
     return this.http.get<Conversation[]>(`${environment.apiUrl}/chat/conversations`, {
       headers: { 'X-User-ID': this.userId || '' }
     });

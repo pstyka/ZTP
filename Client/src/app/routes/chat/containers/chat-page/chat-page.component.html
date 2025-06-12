@@ -4,7 +4,6 @@
     <mat-card class="chat-card chat-window">
         <mat-card-title *ngIf="selectedConversation">{{ selectedConversation?.user_name }}</mat-card-title>
         <div class="messages" *ngIf="selectedConversation; else emptyState">
-            message
         <!-- <div *ngFor="let message of selectedConversation.messages" class="message">
             <strong>{{ message.sender }}:</strong> {{ message.content }}
         </div> -->
