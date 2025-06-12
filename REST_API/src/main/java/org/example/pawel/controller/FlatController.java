@@ -47,12 +47,12 @@ public class FlatController {
     @GetMapping("/search")
     public List<FlatDTO> searchFlats(
         @RequestParam(required = false) String city,
-        @RequestParam(required = false) Integer rooms,
-        @RequestParam(required = false) Double minPrice,
-        @RequestParam(required = false) Double maxPrice,
-        @RequestParam(required = false) Boolean isAvailable,
-        @RequestParam(required = false) Double minArea,
-        @RequestParam(required = false) Double maxArea
+        @RequestParam(required = false) String rooms,
+        @RequestParam(required = false) String minPrice,
+        @RequestParam(required = false) String maxPrice,
+        @RequestParam(required = false) String isAvailable,
+        @RequestParam(required = false) String minArea,
+        @RequestParam(required = false) String maxArea
     ) {
         return flatService.searchFlats(city, rooms, minPrice, maxPrice, isAvailable, minArea, maxArea);
     }
