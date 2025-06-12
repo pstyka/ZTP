@@ -5,8 +5,9 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../../../store';
 import { Flat } from '../../../../models/flat';
 import { FlatActions } from '../../store';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Actions, ofType } from '@ngrx/effects';
+import { getUserIdSelector } from '../../../../auth/store';
 
 @Component({
   selector: 'app-add-flat',
@@ -19,11 +20,14 @@ export class AddFlatComponent implements OnDestroy{
   form!: FormGroup;
   selectedFiles: File[] = [];
   flatId!: number;
+  userId$!: Observable<string | undefined>;
+  userId!: string | undefined;
+
   private subscription = new Subscription();
   
   constructor(private fb: FormBuilder, private store: Store<AppState>, private actions$: Actions) {
     this.form = this.fb.group({
-      // ownerId: ['', Validators.required],
+      ownerId: ['', Validators.required],
       name: ['', Validators.required],
       description: ['', Validators.required],
       city: ['', Validators.required],
@@ -38,6 +42,8 @@ export class AddFlatComponent implements OnDestroy{
       isAvailable: [true]
     });
 
+    this.selectUserId();
+    this.subscribeUserId();
     this.subscribeAddFlatSuccess();
   }
 
@@ -54,7 +60,7 @@ export class AddFlatComponent implements OnDestroy{
 
   resetForm() {
     this.form.patchValue({
-      // ownerId: [''],
+      ownerId: [this.userId],
       name: [''],
       description: [''],
       city: [''],
@@ -75,6 +81,20 @@ export class AddFlatComponent implements OnDestroy{
     if (input.files) {
       this.selectedFiles = Array.from(input.files);
     }
+  }
+
+  private selectUserId() {
+    this.userId$ = this.store.select(getUserIdSelector);
+  }
+
+  private subscribeUserId() {
+    this.userId$.subscribe(id => {
+      this.userId = id;
+
+      this.form.patchValue({
+        ownerId: this.userId
+      });
+    });
   }
 
   private subscribeAddFlatSuccess() {
