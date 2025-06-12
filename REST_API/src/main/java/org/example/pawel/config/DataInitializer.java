@@ -37,13 +37,13 @@ public class DataInitializer implements CommandLineRunner {
             List<User> users = new ArrayList<>();
             if (userRepository.count() == 0) {
                 users = List.of(
-                    createUser("Anna", "Kowalska", "anna@example.com", "123456789"),
-                    createUser("Piotr", "Nowak", "piotr@example.com", "987654321"),
-                    createUser("Marta", "Wiśniewska", "marta@example.com", "555444333"),
-                    createUser("Tomasz", "Lewandowski", "tomek@example.com", "999888777"),
-                    createUser("Kasia", "Mazur", "kasia@example.com", "112233445"),
-                    createUser("Adam", "Wójcik", "adam@example.com", "667788990"),
-                    createUser("Kuba", "Rodzeń", "kowalskipro6@gmail.com", "791020562")
+                    createUser(UUID.fromString("ffc862a8-9935-4b54-a429-f02c6b9ba699"),"Anna", "Kowalska", "anna@example.com", "123456789"),
+                    createUser(UUID.fromString("34a8ed9f-5952-45c2-aca8-6f47dc527158"),"Piotr", "Nowak", "piotr@example.com", "987654321"),
+                    createUser(UUID.fromString("57563ad1-6ebe-465d-a0a7-d05fb6943f84"),"Marta", "Wiśniewska", "marta@example.com", "555444333"),
+                    createUser(UUID.fromString("9d490236-7dc5-42c9-aab0-022271c7beb0"),"Tomasz", "Lewandowski", "tomek@example.com", "999888777"),
+                    createUser(UUID.fromString("ecc7dd2f-c01d-408d-84dd-c8eb78e197ee"),"Kasia", "Mazur", "kasia@example.com", "112233445"),
+                    createUser(UUID.fromString("b026e068-6459-4f1c-9b7f-8530cccad766"),"Adam", "Wójcik", "adam@example.com", "667788990"),
+                    createUser(UUID.fromString("80a3ab73-3a2e-4bd9-b0a9-ac2bd59bdee5"),"Kuba", "Rodzeń", "kowalskipro6@gmail.com", "791020562")
                 );
             }
 
@@ -112,9 +112,9 @@ public class DataInitializer implements CommandLineRunner {
         return flat;
     }
 
-    public User createUser(String firstName, String lastName, String email, String phone) {
+    public User createUser(UUID uuid,String firstName, String lastName, String email, String phone) {
         User user = User.builder()
-            .id(UUID.randomUUID())
+            .id(uuid)
             .firstName(firstName)
             .lastName(lastName)
             .email(email)
