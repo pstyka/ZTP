@@ -1,7 +1,7 @@
 <div class="main-container">
   <mat-card>
     <mat-card-title>My Profile</mat-card-title>
-    <mat-card-content>
+    <mat-card-content class="profile-info">
       <div class="profile-layout">
         <div class="profile-details">
           <p><strong>First Name:</strong> {{ user?.first_name }}</p>
@@ -37,6 +37,14 @@
                 <div class="location">
                   <mat-icon class="location-icon">place</mat-icon>
                   {{ getFlatLocation(flat) }}
+                </div>
+                <div class="action-buttons">
+                  <button mat-icon-button (click)="editFlat(flat); $event.stopPropagation()" aria-label="Edit flat">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button mat-icon-button (click)="deleteFlat(flat); $event.stopPropagation()" aria-label="Delete flat">
+                    <mat-icon>delete</mat-icon>
+                  </button>
                 </div>
               </div>
             </div>

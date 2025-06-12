@@ -50,6 +50,14 @@ export class MyProfileComponent implements OnInit {
     return [city, district, street].filter(part => part.trim()).join(' ');
   }
 
+  editFlat(flat: Flat) {
+
+  }
+
+  deleteFlat(flat: Flat) {
+
+  }
+
   private selectUser(): void {
     this.user$ = this.store.select(getUserSelector);
   }
@@ -70,7 +78,6 @@ export class MyProfileComponent implements OnInit {
   private subscribeOwnerFlats() {
     this.ownerFlats$.subscribe(res => {
       this.ownerFlats = res;
-      console.log(res);
     });
   }
 

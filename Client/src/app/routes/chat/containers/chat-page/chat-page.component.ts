@@ -67,7 +67,6 @@ export class ChatPageComponent implements OnInit {
   private subscribeConversationHistory() {
     this.conversationHistory$.subscribe(res => {
       this.conversationHistory = res;
-      console.log(res);
     })
   }
 

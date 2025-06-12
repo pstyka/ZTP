@@ -1,6 +1,6 @@
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatIconModule } from '@angular/material/icon';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card';
@@ -22,5 +22,7 @@ export const materialImports = [
   MatSnackBarModule,
   MatCheckboxModule,
   MatDialogContent,
-  MatDialogActions
+  MatDialogActions,
+  MatIconModule,
+  MatIcon
 ];
