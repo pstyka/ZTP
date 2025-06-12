@@ -50,23 +50,33 @@ public class FlatService {
                 .map(flatDTOMapper::mapToDTO);
     }
 
-    public List<FlatDTO> searchFlats(String city, Integer rooms, Double minPrice, Double maxPrice,
-                                     Boolean isAvailable, Double minArea, Double maxArea) {
-        if (city == null && rooms == null && minPrice == null && maxPrice == null &&
-            isAvailable == null && minArea == null && maxArea == null) {
-            return flatRepository.findAll().stream()
+    public List<FlatDTO> searchFlats(String city, String rooms, String minPrice, String maxPrice,
+                                     String isAvailable, String minArea, String maxArea) {
+
+        city = blankToNull(city);
+        rooms = blankToNull(rooms);
+        minPrice = blankToNull(minPrice);
+        maxPrice = blankToNull(maxPrice);
+        isAvailable = blankToNull(isAvailable);
+        minArea = blankToNull(minArea);
+        maxArea = blankToNull(maxArea);
+
+        FilterParams params = parseFilterParams(city, rooms, minPrice, maxPrice, isAvailable, minArea, maxArea);
+
+        if (params.hasNoFilters()) {
+            return flatRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt")).stream()
                     .map(flatDTOMapper::mapToDTO)
-                    .collect(Collectors.toList());
+                    .toList();
         }
 
-        return flatRepository.findAll().stream()
-                .filter(flat -> city == null || flat.getCity().equalsIgnoreCase(city))
-                .filter(flat -> rooms == null || flat.getRooms().equals(rooms))
-                .filter(flat -> minPrice == null || flat.getPrice() >= minPrice)
-                .filter(flat -> maxPrice == null || flat.getPrice() <= maxPrice)
-                .filter(flat -> isAvailable == null || flat.getIsAvailable().equals(isAvailable))
-                .filter(flat -> minArea == null || flat.getArea() >= minArea)
-                .filter(flat -> maxArea == null || flat.getArea() <= maxArea)
+        return flatRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt")).stream()
+                .filter(flat -> params.cityFilter == null || flat.getCity().toLowerCase().startsWith(params.cityFilter))
+                .filter(flat -> params.roomsValue == null || flat.getRooms().equals(params.roomsValue))
+                .filter(flat -> params.minPriceValue == null || flat.getPrice() >= params.minPriceValue)
+                .filter(flat -> params.maxPriceValue == null || flat.getPrice() <= params.maxPriceValue)
+                .filter(flat -> params.isAvailableValue == null || flat.getIsAvailable().equals(params.isAvailableValue))
+                .filter(flat -> params.minAreaValue == null || flat.getArea() >= params.minAreaValue)
+                .filter(flat -> params.maxAreaValue == null || flat.getArea() <= params.maxAreaValue)
                 .map(flatDTOMapper::mapToDTO)
                 .collect(Collectors.toList());
     }
@@ -146,6 +156,54 @@ public class FlatService {
         return flatRepository.findByOwnerId(ownerId).stream()
                 .map(flatDTOMapper::mapToDTO)
                 .collect(Collectors.toList());
+    }
+
+    private String blankToNull(String value) {
+        return (value != null && value.isBlank()) ? null : value;
+    }
+
+    private FilterParams parseFilterParams(String city, String rooms, String minPrice, String maxPrice,
+                                           String isAvailable, String minArea, String maxArea) {
+
+        try {
+            return new FilterParams(
+                    (city != null) ? city.toLowerCase() : null,
+                    (rooms != null) ? Integer.parseInt(rooms) : null,
+                    (minPrice != null) ? Double.parseDouble(minPrice) : null,
+                    (maxPrice != null) ? Double.parseDouble(maxPrice) : null,
+                    (isAvailable != null) ? Boolean.parseBoolean(isAvailable) : null,
+                    (minArea != null) ? Double.parseDouble(minArea) : null,
+                    (maxArea != null) ? Double.parseDouble(maxArea) : null
+            );
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Podane wartości liczbowych parametrów są nieprawidłowe.");
+        }
+    }
+
+    private static class FilterParams {
+        final String cityFilter;
+        final Integer roomsValue;
+        final Double minPriceValue;
+        final Double maxPriceValue;
+        final Boolean isAvailableValue;
+        final Double minAreaValue;
+        final Double maxAreaValue;
+
+        FilterParams(String cityFilter, Integer roomsValue, Double minPriceValue, Double maxPriceValue,
+                     Boolean isAvailableValue, Double minAreaValue, Double maxAreaValue) {
+            this.cityFilter = cityFilter;
+            this.roomsValue = roomsValue;
+            this.minPriceValue = minPriceValue;
+            this.maxPriceValue = maxPriceValue;
+            this.isAvailableValue = isAvailableValue;
+            this.minAreaValue = minAreaValue;
+            this.maxAreaValue = maxAreaValue;
+        }
+
+        boolean hasNoFilters() {
+            return cityFilter == null && roomsValue == null && minPriceValue == null && maxPriceValue == null &&
+                    isAvailableValue == null && minAreaValue == null && maxAreaValue == null;
+        }
     }
 
 }
