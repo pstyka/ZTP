@@ -76,9 +76,9 @@ async def websocket_endpoint(websocket: WebSocket, user_id: str, db: Session = D
 
 @router.get("/messages/{user_id}", response_model=list[MessageResponse])
 async def get_conversation(
-        user_id: str,
-        request: Request,
-        db: Session = Depends(get_db),
+    user_id: str,
+    request: Request,
+    db: Session = Depends(get_db),
 ):
     current_user_id = request.headers.get("X-User-ID")
     messages = db.query(Message).filter(
@@ -107,8 +107,8 @@ async def get_conversation(
 
 @router.get("/conversations", response_model=list[dict])
 async def get_conversations(
-        request: Request,
-        db: Session = Depends(get_db),
+    request: Request,
+    db: Session = Depends(get_db),
 ):
     current_user_id = request.headers.get("X-User-ID")
     conversations = db.query(Message).filter(

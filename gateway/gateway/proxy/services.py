@@ -2,6 +2,7 @@ import json
 import logging
 import time
 from typing import Any
+import hashlib
 
 import httpx
 from fastapi import Request, HTTPException, status
@@ -86,6 +87,50 @@ class ServiceResponse:
         self.process_time = process_time
 
 
+def get_cache_relevant_headers(headers: dict[str, str]) -> dict[str, str]:
+    cache_relevant_headers = [
+        "x-user-id",
+        "x-user",
+        "x-user-role",
+        "authorization",
+        "accept-language",
+        "x-tenant-id",
+        "x-organization-id"
+    ]
+
+    return {
+        key.lower(): value
+        for key, value in headers.items()
+        if key.lower() in cache_relevant_headers
+    }
+
+
+def get_enhanced_cache_key(
+    service: str,
+    path: str,
+    method: str,
+    query_params: dict[str, str],
+    headers: dict[str, str]
+) -> str:
+
+    relevant_headers = get_cache_relevant_headers(headers)
+    sorted_params = dict(sorted(query_params.items())) if query_params else {}
+    sorted_headers = dict(sorted(relevant_headers.items())) if relevant_headers else {}
+
+    cache_data = {
+        "service": service,
+        "path": path,
+        "method": method,
+        "params": sorted_params,
+        "headers": sorted_headers
+    }
+
+    cache_string = json.dumps(cache_data, sort_keys=True, separators=(',', ':'))
+    cache_hash = hashlib.md5(cache_string.encode()).hexdigest()
+
+    return f"service_cache:{service}:{cache_hash}"
+
+
 async def proxy_request(
     request: Request,
     service_request: ServiceRequest
@@ -98,13 +143,24 @@ async def proxy_request(
 
     start_time = time.time()
 
+    headers = service_request.headers.copy()
+
+    if hasattr(request.state, "request_id"):
+        headers["X-Request-ID"] = request.state.request_id
+
+    if hasattr(request.state, "user"):
+        user = request.state.user
+        headers["X-User"] = user.username
+        headers["X-User-Role"] = user.role
+
     from_cache = False
     if method == "GET":
-        cache_key = get_service_cache_key(
+        cache_key = get_enhanced_cache_key(
             service,
             path,
             method,
-            service_request.query_params
+            service_request.query_params,
+            headers
         )
 
         cached_response = redis_client.get(cache_key)
@@ -124,16 +180,6 @@ async def proxy_request(
                 process_time=process_time
             )
 
-    headers = service_request.headers.copy()
-
-    if hasattr(request.state, "request_id"):
-        headers["X-Request-ID"] = request.state.request_id
-
-    if hasattr(request.state, "user"):
-        user = request.state.user
-        headers["X-User"] = user.username
-        headers["X-User-Role"] = user.role
-
     try:
         response = await call_service(
             method,
@@ -146,11 +192,12 @@ async def proxy_request(
         response_data = response.json()
 
         if method == "GET" and response.status_code == 200:
-            cache_key = get_service_cache_key(
+            cache_key = get_enhanced_cache_key(
                 service,
                 path,
                 method,
-                service_request.query_params
+                service_request.query_params,
+                headers
             )
 
             redis_client.set(
