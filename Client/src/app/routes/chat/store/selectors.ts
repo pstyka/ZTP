@@ -3,15 +3,15 @@ import { AppState } from "../../../store";
 
 export const selectFeature = (state: AppState) => state.chatState;
 
-// export const getFlatsSelector = createSelector(
-//     selectFeature, 
-//     (state) => state.flats
-// );
+export const getConversationsSelector = createSelector(
+    selectFeature, 
+    (state) => state.conversations
+);
 
-// export const getFlatPhotosUrlsSelector = createSelector(
-//     selectFeature, 
-//     (state) => state.flatPhotosUrls
-// );
+export const getConversationHistorySelector = createSelector(
+    selectFeature, 
+    (state) => state.conversationHistory
+);
 
 // export const getFlatSelector = createSelector(
 //     selectFeature,

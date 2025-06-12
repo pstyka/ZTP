@@ -12,3 +12,8 @@ export const getTokenSelector = createSelector(
     selectFeature, 
     (state) => state.token
 );
+
+export const getUserIdSelector = createSelector(
+    selectFeature, 
+    (state) => state.userId
+);

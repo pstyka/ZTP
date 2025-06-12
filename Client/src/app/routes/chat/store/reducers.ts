@@ -1,19 +1,22 @@
 import { createReducer, on } from "@ngrx/store";
-import { ChatState } from ".";
+import { ChatActions, ChatState } from ".";
+import { Conversation } from "../../../models/chat";
 
 export const initialState: ChatState = {
+    conversations: [] as Conversation[],
+    conversationHistory: undefined
 };
 
 export const reducer = createReducer(
     initialState,
-    // on(FlatActions.getFlats, (state, action) => ({
-    //     ...state,
-    //     flats: undefined
-    // })),
-    // on(FlatActions.getFlatsSuccess, (state, action) => ({
-    //     ...state,
-    //     flats: action.flats
-    // })),
+    on(ChatActions.getConversationsSuccess, (state, action) => ({
+        ...state,
+        conversations: action.conversetions
+    })),
+    on(ChatActions.getConversationHistorySuccess, (state, action) => ({
+        ...state,
+        conversationHistory: action.conversationHistory
+    })),
     // on(FlatActions.getFlatPhotosSuccess, (state, action) => ({
     //     ...state,
     //     flatPhotosUrls: action.urls

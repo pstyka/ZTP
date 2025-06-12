@@ -1,3 +1,30 @@
 <div class="main-container">
-    <p>chat-page works!</p>
+  <div class="chat-layout">
+    <!-- Lewa kolumna: wiadomości -->
+    <mat-card class="chat-card chat-window">
+        <mat-card-title *ngIf="selectedConversation">{{ selectedConversation?.user_name }}</mat-card-title>
+        <div class="messages" *ngIf="selectedConversation; else emptyState">
+        <!-- <div *ngFor="let message of selectedConversation.messages" class="message">
+            <strong>{{ message.sender }}:</strong> {{ message.content }}
+        </div> -->
+        </div>
+        <ng-template #emptyState>
+        <p>Select chat</p>
+        </ng-template>
+    </mat-card>
+
+    <!-- Prawa kolumna: lista konwersacji -->
+    <mat-card class="chat-card conversation-list-card">
+        <mat-card-title>Chats</mat-card-title>
+        <ul class="conversation-list">
+        <li *ngFor="let conversation of conversations" (click)="selectConversation(conversation)"
+            [class.selected]="conversation === selectedConversation">
+            <div class="conversation-item">
+            <div class="user-name">{{ conversation.user_name }}</div>
+            <div class="last-message">{{ conversation.last_message }}</div>
+            </div>
+        </li>
+        </ul>
+    </mat-card>
+    </div>
 </div>

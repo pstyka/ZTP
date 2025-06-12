@@ -41,9 +41,15 @@ export class AuthService {
         );
     }
 
-    public getToken(): Observable<string | null> {
-        const token = localStorage.getItem("auth_token");
-        return of(token);
-    }
+    public getToken(): Observable<{ access_token: string; token_type: string } | null> {
+        const raw = localStorage.getItem("auth_token");
 
+        try {
+            const token = raw ? JSON.parse(raw) : null;
+            return of(token);
+        } catch (e) {
+            console.error("Invalid token in localStorage", e);
+            return of(null);
+        }
+    }
 }
