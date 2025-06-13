@@ -32,5 +32,19 @@ public class FlatPhotosController {
     public ResponseEntity<List<String>> getPhotoUrls(@PathVariable UUID flatId) {
         return ResponseEntity.ok(flatPhotoService.getPhotoUrlsByFlatId(flatId));
     }
+
+    @Operation(summary = "Delete photos by flatID", description = "Deletes all photos for a specific flat.")
+    @DeleteMapping("/{flatId}/photos")
+    public ResponseEntity<Void> deletePhotos(@PathVariable UUID flatId) {
+        flatPhotoService.deletePhotosByFlatId(flatId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Delete a specific photo", description = "Deletes a specific photo by its ID.")
+    @DeleteMapping("/photos/{photoId}")
+    public ResponseEntity<Void> deletePhoto(@PathVariable UUID photoId) {
+        flatPhotoService.deletePhotoById(photoId);
+        return ResponseEntity.noContent().build();
+    }
 }
 
