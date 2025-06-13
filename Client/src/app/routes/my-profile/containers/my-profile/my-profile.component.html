@@ -1,7 +1,7 @@
 <div class="main-container">
   <mat-card>
     <mat-card-title>My Profile</mat-card-title>
-    <mat-card-content>
+    <mat-card-content class="profile-info">
       <div class="profile-layout">
         <div class="profile-details">
           <p><strong>First Name:</strong> {{ user?.first_name }}</p>
@@ -14,6 +14,43 @@
           <mat-icon class="profile-icon">account_circle</mat-icon>
         </div>
       </div>
+    </mat-card-content>
+
+    <mat-card-title id="my-listings">My Flat's</mat-card-title>
+    <mat-card-content>
+      <mat-list role="list">
+        <mat-list-item *ngFor="let flat of ownerFlats" role="listitem" class="flat-item" (click)="goToFlat(flat)">
+          <div class="flat-content">
+            <div class="left">
+              <img class="flat-thumbnail" *ngIf="flat.photos" [src]="flat.photos?.length ? mapPhoto(flat.photos[0]) : ''" alt="Flat thumbnail"/>
+              <div class="info">
+                <div class="name">{{ flat.name || 'Brak nazwy' }}</div>
+                <div class="area">
+                  <mat-icon class="area-icon">aspect_ratio</mat-icon>
+                  {{ flat.area ? (flat.area + ' m²') : 'Unknown area' }}
+                </div>
+              </div>
+            </div>
+            <div class="right">
+              <div class="meta">
+                <div class="price">{{ flat.price ? (flat.price + ' $') : 'Unknown price' }}</div>
+                <div class="location">
+                  <mat-icon class="location-icon">place</mat-icon>
+                  {{ getFlatLocation(flat) }}
+                </div>
+                <div class="action-buttons">
+                  <button mat-icon-button (click)="editFlat(flat); $event.stopPropagation()" aria-label="Edit flat">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button mat-icon-button (click)="deleteFlat(flat); $event.stopPropagation()" aria-label="Delete flat">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-list-item>
+      </mat-list>
     </mat-card-content>
   </mat-card>
 </div>

@@ -42,13 +42,13 @@ export class ChatService {
   }
 
   getConversationHistory(userId: string): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/chat/messages/${userId}`, {
+    return this.http.get<any>(`${environment.chatUrl}/chat/messages/${userId}`, {
       headers: { 'X-User-ID': this.userId || '' }
     });
   }
 
   getConversations(): Observable<Conversation[]> {
-    return this.http.get<Conversation[]>(`${environment.apiUrl}/chat/conversations`, {
+    return this.http.get<Conversation[]>(`${environment.chatUrl}/chat/conversations`, {
       headers: { 'X-User-ID': this.userId || '' }
     });
   }
@@ -71,7 +71,7 @@ export class ChatService {
   private connectWebSocket(): void {
     if (!this.userId) return;
 
-    const wsUrl = `ws://${environment.usersUrl}${this.userId}`;
+    const wsUrl = `ws://${environment.socketUrl}${this.userId}`;
     this.socket = new WebSocket(wsUrl);
 
     this.socket.onopen = () => {

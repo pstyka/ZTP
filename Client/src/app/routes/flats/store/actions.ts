@@ -90,3 +90,32 @@ export const getFlatFailure = createAction(
     `${prefix} Get Flats Failure`,
     props<{ error: string }>()
 );
+
+export const getFlatsByOwnerId = createAction(
+    `${prefix} Get Flats By Owner Id`,
+    props<{ ownerId: string }>()
+);
+
+export const getFlatsByOwnerIdSuccess = createAction(
+    `${prefix} Get Flats By Owner Id Success`,
+    props<{ flats: Flat[] }>()
+);
+
+export const getFlatsByOwnerIdFailure = createAction(
+    `${prefix} Get Flats By Owner Id Failure`,
+    props<{ error: string }>()
+);
+
+export const deleteFlat = createAction(
+    `${prefix} Delete Flat`,
+    props<{ id: string }>()
+);
+
+export const deleteFlatSuccess = createAction(
+    `${prefix} Delete Flat Success`
+);
+
+export const deleteFlatFailure = createAction(
+    `${prefix} Delete Flat Failure`,
+    props<{ error: string }>()
+);

@@ -1,10 +1,10 @@
 import { createReducer, on } from "@ngrx/store";
 import { ChatActions, ChatState } from ".";
-import { Conversation } from "../../../models/chat";
+import { Conversation, Message } from "../../../models/chat";
 
 export const initialState: ChatState = {
     conversations: [] as Conversation[],
-    conversationHistory: undefined
+    conversationHistory: [] as Message[]
 };
 
 export const reducer = createReducer(
@@ -17,13 +17,5 @@ export const reducer = createReducer(
         ...state,
         conversationHistory: action.conversationHistory
     })),
-    // on(FlatActions.getFlatPhotosSuccess, (state, action) => ({
-    //     ...state,
-    //     flatPhotosUrls: action.urls
-    // })),
-    // on(FlatActions.getFlatSuccess, (state, action) => ({
-    //     ...state,
-    //     flat: action.flat
-    // }))
 );
 

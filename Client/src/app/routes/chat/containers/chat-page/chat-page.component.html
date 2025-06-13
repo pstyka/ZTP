@@ -1,19 +1,40 @@
 <div class="main-container">
   <div class="chat-layout">
-    <!-- Lewa kolumna: wiadomości -->
     <mat-card class="chat-card chat-window">
         <mat-card-title *ngIf="selectedConversation">{{ selectedConversation?.user_name }}</mat-card-title>
-        <div class="messages" *ngIf="selectedConversation; else emptyState">
-        <!-- <div *ngFor="let message of selectedConversation.messages" class="message">
-            <strong>{{ message.sender }}:</strong> {{ message.content }}
-        </div> -->
+
+        <div class="messages" *ngIf="selectedConversation; else emptyState" #messageContainer>
+            <div *ngFor="let message of conversationHistory$ | async"
+                class="message"
+                [ngClass]="{ 'received': message.sender_id !== userId, 'sent': message.sender_id === userId }">
+            {{ message.content }}
+            </div>
         </div>
+
+        <div class="message-input-container" *ngIf="selectedConversation">
+            <form (ngSubmit)="sendMessage()" #messageForm="ngForm">
+            <mat-form-field class="message-input" appearance="outline">
+                <input
+                matInput
+                autocomplete="off"
+                placeholder="Type your message..."
+                name="message"
+                [(ngModel)]="messageText"
+                (keydown.enter)="sendMessage()"
+                required
+                />
+            </mat-form-field>
+            <button mat-icon-button color="primary" type="submit" [disabled]="!messageText?.trim()">
+                <mat-icon>send</mat-icon>
+            </button>
+            </form>
+        </div>
+
         <ng-template #emptyState>
-        <p>Select chat</p>
+            <p>Select chat</p>
         </ng-template>
     </mat-card>
 
-    <!-- Prawa kolumna: lista konwersacji -->
     <mat-card class="chat-card conversation-list-card">
         <mat-card-title>Chats</mat-card-title>
         <ul class="conversation-list">

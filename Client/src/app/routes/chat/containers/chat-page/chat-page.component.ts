@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AppState } from '../../../../store';
 import { ChatActions, getConversationHistorySelector, getConversationsSelector } from '../../store';
 import { commonImports, materialImports } from '../../../../core';
-import { Conversation } from '../../../../models/chat';
+import { Conversation, Message } from '../../../../models/chat';
 import { getUserIdSelector } from '../../../../auth/store';
+import { ChatService } from '../../../../services';
 
 @Component({
   selector: 'app-chat-page',
@@ -14,15 +15,19 @@ import { getUserIdSelector } from '../../../../auth/store';
   styleUrls: ['../../../../../styles.scss','./chat-page.component.scss']
 })
 export class ChatPageComponent implements OnInit {
+  @ViewChild('messageContainer') private messageContainer!: ElementRef;
+
   userId$!: Observable<string | undefined>;
   userId!: string | undefined;
   conversations$!: Observable<Conversation[]>;
   conversations!: Conversation[];
   selectedConversation!: Conversation;
-  conversationHistory$!: Observable<any>;
-  conversationHistory!: any;
+  conversationHistory$!: Observable<Message[]>;
+  conversationHistory!: Message[];
+
+  messageText: string = '';
   
-  constructor(private store: Store<AppState>) {
+  constructor(private store: Store<AppState>, private chatService: ChatService) {
     this.selectUserId();
     this.subscribeUserId();
     this.selectConversations();
@@ -35,9 +40,20 @@ export class ChatPageComponent implements OnInit {
     this.dispatchConversations()
   }
 
-  selectConversation(conversation: any) {
+  selectConversation(conversation: Conversation) {
     this.selectedConversation = conversation;
-    this.dispatchSelectedConversationsInfo();
+    this.dispatchConversationHistory(conversation.user_id);
+  }
+
+  sendMessage(): void {
+    const trimmed = this.messageText?.trim();
+    if (!trimmed || !this.selectedConversation || !this.userId) return;
+
+    if(this.selectedConversation.user_id && trimmed) {
+      this.chatService.sendMessage(this.selectedConversation.user_id, trimmed);
+    }
+
+    this.messageText = '';
   }
 
   private selectUserId() {
@@ -67,17 +83,25 @@ export class ChatPageComponent implements OnInit {
   private subscribeConversationHistory() {
     this.conversationHistory$.subscribe(res => {
       this.conversationHistory = res;
-      console.log(res);
+      this.scrollToBottom();
     })
+  }
+
+  private scrollToBottom(): void {
+    try {
+      this.messageContainer.nativeElement.scrollTop = this.messageContainer.nativeElement.scrollHeight;
+    } catch (err) {
+      console.error('Failed to scroll', err);
+    }
   }
 
   private dispatchConversations() {
     this.store.dispatch(ChatActions.getConversations());
   }
   
-  private dispatchSelectedConversationsInfo() {
-    if(this.userId) {
-      this.store.dispatch(ChatActions.getConversationHistory({ userId: this.userId }))
+  private dispatchConversationHistory(id: string | undefined) {
+    if(id) {
+      this.store.dispatch(ChatActions.getConversationHistory({ userId: id }))
     }
   }
 }

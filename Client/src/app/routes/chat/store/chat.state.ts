@@ -1,6 +1,6 @@
-import { Conversation } from "../../../models/chat";
+import { Conversation, Message } from "../../../models/chat";
 
 export interface ChatState {
     conversations: Conversation[];
-    conversationHistory: any;
+    conversationHistory: Message[];
 }

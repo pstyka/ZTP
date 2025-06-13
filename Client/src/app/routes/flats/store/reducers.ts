@@ -3,8 +3,9 @@ import { FlatActions, FlatState } from "./index";
 
 export const initialState: FlatState = {
     flat: undefined,
-    flats: undefined,
+    flats: [],
     flatPhotosUrls: undefined,
+    ownerFlats: []
 };
 
 export const reducer = createReducer(
@@ -24,6 +25,10 @@ export const reducer = createReducer(
     on(FlatActions.getFlatSuccess, (state, action) => ({
         ...state,
         flat: action.flat
+    })),
+    on(FlatActions.getFlatsByOwnerIdSuccess, (state, action) => ({
+        ...state,
+        ownerFlats: action.flats
     }))
 );
 
