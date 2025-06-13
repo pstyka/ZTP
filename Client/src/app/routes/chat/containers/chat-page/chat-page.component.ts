@@ -57,28 +57,6 @@ export class ChatPageComponent implements OnInit {
     this.messageText = '';
   }
 
-  // sendMessage(): void {
-  //   const trimmed = this.messageText?.trim();
-  //   if (!trimmed || !this.selectedConversation || !this.userId) return;
-
-  //   const message: Message = {
-  //     sender_id: this.userId,
-  //     receiver_id: this.selectedConversation.user_id,
-  //     content: trimmed,
-  //   };
-
-  //     if(this.selectedConversation.user_id && trimmed) {
-  //       this.chatService.sendMessage(this.selectedConversation.user_id, trimmed);
-  //     }
-
-  //   this.conversationHistory = [...this.conversationHistory, message];
-
-  //   this.messageText = '';
-
-  //   this.scrollToBottom();
-  // }
-
-
   private selectUserId() {
     this.userId$ = this.store.select(getUserIdSelector);
   }

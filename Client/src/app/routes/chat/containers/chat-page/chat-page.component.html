@@ -21,7 +21,6 @@
                 name="message"
                 [(ngModel)]="messageText"
                 (keydown.enter)="sendMessage()"
-                required
                 />
             </mat-form-field>
             <button mat-icon-button color="primary" type="submit" [disabled]="!messageText?.trim()">
