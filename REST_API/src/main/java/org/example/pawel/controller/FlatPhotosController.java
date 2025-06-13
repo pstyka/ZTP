@@ -33,6 +33,14 @@ public class FlatPhotosController {
         return ResponseEntity.ok(flatPhotoService.getPhotoUrlsByFlatId(flatId));
     }
 
+    @Operation(summary = "Update photos for a flat", description = "Updates the photos for a specific flat.")
+    @PutMapping("/{flatId}/photos")
+    public ResponseEntity<Void> updatePhotos(@PathVariable UUID flatId,
+                                             @RequestParam("photos") List<MultipartFile> photos) {
+        flatPhotoService.updatePhotos(flatId, photos);
+        return ResponseEntity.ok().build();
+    }
+
     @Operation(summary = "Delete photos by flatID", description = "Deletes all photos for a specific flat.")
     @DeleteMapping("/{flatId}/photos")
     public ResponseEntity<Void> deletePhotos(@PathVariable UUID flatId) {

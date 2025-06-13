@@ -85,4 +85,10 @@ public class FlatPhotosService {
             System.err.println("Failed to delete file: " + e.getMessage());
         }
     }
+
+
+    public void updatePhotos(UUID flatId, List<MultipartFile> files) {
+        deletePhotosByFlatId(flatId);
+        addPhotos(flatId, files);
+    }
 }
