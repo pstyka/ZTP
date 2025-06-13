@@ -4,7 +4,7 @@
         <mat-card-title *ngIf="selectedConversation">{{ selectedConversation?.user_name }}</mat-card-title>
 
         <div class="messages" *ngIf="selectedConversation; else emptyState" #messageContainer>
-            <div *ngFor="let message of conversationHistory$ | async"
+            <div *ngFor="let message of conversationHistory"
                 class="message"
                 [ngClass]="{ 'received': message.sender_id !== userId, 'sent': message.sender_id === userId }">
             {{ message.content }}
