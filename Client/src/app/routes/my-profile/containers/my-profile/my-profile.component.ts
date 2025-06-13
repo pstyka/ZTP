@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../../store';
 import { User } from '../../../../models/user';
-import { Observable } from 'rxjs';
+import { filter, Observable } from 'rxjs';
 import { getUserSelector, UserActions } from '../../store';
 import { commonImports, materialImports } from '../../../../core';
 import { CommonModule } from '@angular/common';
@@ -11,6 +11,9 @@ import { Flat } from '../../../../models/flat';
 import { getFlatsByOwnerId } from '../../../flats/store/actions';
 import { Router } from '@angular/router';
 import { environment } from '../../../../../environment';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../../../shared/dialogs';
+import { Actions, ofType } from '@ngrx/effects';
 
 @Component({
   selector: 'app-my-profile',
@@ -24,11 +27,12 @@ export class MyProfileComponent implements OnInit {
   ownerFlats$!: Observable<Flat[] | undefined>;
   ownerFlats!: Flat[] | undefined;
   
-  constructor(private store: Store<AppState>, private router: Router) {
+  constructor(private store: Store<AppState>, private router: Router, private dialog: MatDialog, private actions$: Actions) {
     this.selectUser();
     this.subscribeUser();
     this.selectOwnerFlats();
     this.subscribeOwnerFlats();
+    this.subscribeDeleteFlatSuccess();
   }
 
   ngOnInit(): void {
@@ -55,7 +59,15 @@ export class MyProfileComponent implements OnInit {
   }
 
   deleteFlat(flat: Flat) {
-
+      this.dialog.open(ConfirmDialogComponent, {
+        width: '500px',
+      }).afterClosed().subscribe(result => {
+        if (result) {
+          if(flat.id) {
+          this.store.dispatch(FlatActions.deleteFlat({id: flat.id}));
+          }
+        }
+      });
   }
 
   private selectUser(): void {
@@ -78,6 +90,16 @@ export class MyProfileComponent implements OnInit {
   private subscribeOwnerFlats() {
     this.ownerFlats$.subscribe(res => {
       this.ownerFlats = res;
+    });
+  }
+
+  private subscribeDeleteFlatSuccess() {
+    this.actions$.pipe(
+      ofType(FlatActions.deleteFlatSuccess)
+    ).subscribe(() => {
+      if(this.user && this.user.id) {
+        this.store.dispatch(FlatActions.getFlatsByOwnerId({ownerId: this.user.id}))
+      }
     });
   }
 

@@ -8,7 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatDialogActions, MatDialogContent } from '@angular/material/dialog';
+import { MatDialog, MatDialogActions, MatDialogContent } from '@angular/material/dialog';
 
 export const materialImports = [
   MatButtonModule,
@@ -24,5 +24,5 @@ export const materialImports = [
   MatDialogContent,
   MatDialogActions,
   MatIconModule,
-  MatIcon
+  MatIcon,
 ];

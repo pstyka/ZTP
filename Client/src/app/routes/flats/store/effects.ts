@@ -113,6 +113,21 @@ export class FlatEffects {
         )
     );
 
+    deleteFlat$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(FlatActions.deleteFlat),
+            mergeMap((action) => {
+                return this.flatService.deleteFlat(action.id).pipe(
+                    map((res) => FlatActions.deleteFlatSuccess()),
+                    catchError((error) => {
+                        return of(FlatActions.deleteFlatFailure({ error: error.message }));
+                    }
+                    )
+                );
+            })
+        )
+    );
+
     getFlatsByOwnerId$ = createEffect(() =>
         this.actions$.pipe(
             ofType(FlatActions.getFlatsByOwnerId),

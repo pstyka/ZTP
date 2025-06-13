@@ -67,4 +67,11 @@ export class FlatService {
             catchError((error) => throwError(() => error))
         );
     }
+
+    public deleteFlat(id: string): Observable<void> {
+        return this.httpClient.delete<void>(`${environment.apiUrlTmp}/rest/flats/${id}`).pipe(
+            catchError(error => throwError(() => error))
+        );
+    }
+
 }
