@@ -83,13 +83,13 @@ export class EditFlatComponent implements OnInit, OnDestroy {
   }
 
   private subscribeEditFlatSuccess() {
-  //   this.subscription.add(
-  //     this.actions$.pipe(ofType(FlatActions.editFlatSuccess)).subscribe(({ id }) => {
-  //       if (this.selectedFiles.length) {
-  //         this.store.dispatch(FlatActions.addFlatPhotos({ id, photos: this.selectedFiles }));
-  //       }
-  //     })
-  //   );
+    this.subscription.add(
+      this.actions$.pipe(ofType(FlatActions.editFlatSuccess)).subscribe(({ id }) => {
+        if (this.selectedFiles.length) {
+          this.store.dispatch(FlatActions.editFlatPhotos({ id, photos: this.selectedFiles }));
+        }
+      })
+    );
   }
 
   private dispatchGetFlat() {
@@ -134,7 +134,6 @@ export class EditFlatComponent implements OnInit, OnDestroy {
         });
 
         this.selectedFiles = await Promise.all(filePromises);
-        console.log(this.selectedFiles);
       }
     })
   }

@@ -168,4 +168,19 @@ export class FlatEffects {
             })
         )
     );
+
+    editFlatPhotos$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(FlatActions.editFlatPhotos),
+            mergeMap((action) => {
+                return this.flatService.editPhotos(action.id, action.photos).pipe(
+                    map((res) => FlatActions.editFlatPhotosSuccess()),
+                    catchError((error) => {
+                        return of(FlatActions.editFlatPhotosFailure({ error: error.message }));
+                    }
+                    )
+                );
+            })
+        )
+    );
 }

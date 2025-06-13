@@ -69,6 +69,19 @@ export class FlatService {
         );
     }
 
+    public editPhotos(id: string, photos: File[]) {
+        const formData = new FormData();
+
+        photos.forEach(photo => {
+            formData.append('photos', photo);
+        });
+
+
+        return this.httpClient.put(`${environment.apiUrlTmp}/rest/flats/${id}/photos`, formData).pipe(
+            catchError(error => throwError(() => error))
+        );
+    }
+
     public getPhotos(id: string) {
         return this.httpClient.get<string[]>(`${environment.apiUrlTmp}/rest/flats/${id}/photos`).pipe(
             catchError((error) => throwError(() => error))

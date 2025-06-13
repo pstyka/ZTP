@@ -134,3 +134,17 @@ export const editFlatFailure = createAction(
     `${prefix} Edit Flat Failure`,
     props<{ error: string }>()
 );
+
+export const editFlatPhotos = createAction(
+    `${prefix} Edit Flat Photos`,
+    props<{ id: string, photos: File[] }>()
+);
+
+export const editFlatPhotosSuccess = createAction(
+    `${prefix} Edit Flat Photos Success`
+);
+
+export const editFlatPhotosFailure = createAction(
+    `${prefix} Edit Flat Failure`,
+    props<{ error: string }>()
+);
