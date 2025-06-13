@@ -17,6 +17,13 @@ export class FlatService {
         );
     }
 
+    public edit(flat: Flat): Observable<string> {
+        return this.httpClient.put<string>(`${environment.apiUrlTmp}/rest/flats/${flat.id}`, flat).pipe(
+            catchError(error => throwError(() => error))
+        );
+    }
+
+
     public getFlat(id: string): Observable<Flat> {
         return this.httpClient.get<Flat>(`${environment.apiUrlTmp}/rest/flats/${id}`).pipe(
             catchError((error) => throwError(() => error))

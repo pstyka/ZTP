@@ -1,0 +1,84 @@
+.main-container {
+  display: flex;
+  justify-content: center;
+}
+
+mat-card {
+  width: 100%;
+  max-width: 700px;
+  padding: 2rem;
+  background-color: #f0f0f0;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.form-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+.actions {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.file-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+
+  .file-label {
+    font-weight: 600;
+    color: #444;
+  }
+
+  .file-input {
+    padding: 0.5rem;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+
+    &:hover {
+      border-color: #3f51b5;
+    }
+  }
+
+  .file-info {
+    font-size: 0.875rem;
+    color: #666;
+  }
+}
+
+.full-width {
+  grid-column: span 2;
+}
+
+
+@media (min-width: 600px) {
+  .form-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-checkbox {
+  margin-top: 1rem;
+}
+
+.button-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+
+  button {
+    margin-left: 1rem;
+  }
+}

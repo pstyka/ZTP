@@ -31,8 +31,34 @@ export class FlatEffects {
         () =>
             this.actions$.pipe(
             ofType(FlatActions.addFlatSuccess),
-            map((token) => {
+            map(() => {
                 this.notificationService.success("Flat has been added.");
+            })
+            ),
+        { dispatch: false }
+    );
+
+    editFlat$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(FlatActions.editFlat),
+            mergeMap((action) => {
+                return this.flatService.edit(action.flat).pipe(
+                    map((res) => FlatActions.editFlatSuccess({ id: res })),
+                    catchError((error) => {
+                        return of(FlatActions.editFlatFailure({ error: error.message }));
+                    }
+                    )
+                );
+            })
+        )
+    );
+
+    onEditFlatSuccess$ = createEffect(
+        () =>
+            this.actions$.pipe(
+            ofType(FlatActions.editFlatSuccess),
+            map(() => {
+                this.notificationService.success("Flat has been edited.");
             })
             ),
         { dispatch: false }
