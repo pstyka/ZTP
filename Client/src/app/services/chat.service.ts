@@ -115,5 +115,3 @@ export class ChatService {
     });
   }
 }
-
-//chat/messages/{user_id} pobiera wszystkie wiadomości

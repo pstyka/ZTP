@@ -55,7 +55,7 @@ export class MyProfileComponent implements OnInit {
   }
 
   editFlat(flat: Flat) {
-
+    this.router.navigate(['/flats/edit', flat.id]);
   }
 
   deleteFlat(flat: Flat) {

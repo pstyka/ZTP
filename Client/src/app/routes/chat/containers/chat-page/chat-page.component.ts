@@ -34,6 +34,7 @@ export class ChatPageComponent implements OnInit {
     this.subscribeConversations();
     this.selectConversationHistory();
     this.subscribeConversationHistory();
+    this.subscribeToMessages();
   }
 
   ngOnInit(): void {
@@ -55,6 +56,28 @@ export class ChatPageComponent implements OnInit {
 
     this.messageText = '';
   }
+
+  // sendMessage(): void {
+  //   const trimmed = this.messageText?.trim();
+  //   if (!trimmed || !this.selectedConversation || !this.userId) return;
+
+  //   const message: Message = {
+  //     sender_id: this.userId,
+  //     receiver_id: this.selectedConversation.user_id,
+  //     content: trimmed,
+  //   };
+
+  //     if(this.selectedConversation.user_id && trimmed) {
+  //       this.chatService.sendMessage(this.selectedConversation.user_id, trimmed);
+  //     }
+
+  //   this.conversationHistory = [...this.conversationHistory, message];
+
+  //   this.messageText = '';
+
+  //   this.scrollToBottom();
+  // }
+
 
   private selectUserId() {
     this.userId$ = this.store.select(getUserIdSelector);
@@ -93,6 +116,16 @@ export class ChatPageComponent implements OnInit {
     } catch (err) {
       console.error('Failed to scroll', err);
     }
+  }
+
+  private subscribeToMessages(): void {
+    this.chatService.getMessages().subscribe((message: Message) => {
+      if (message.sender_id === this.selectedConversation?.user_id ||
+          message.receiver_id === this.selectedConversation?.user_id) {
+        this.conversationHistory = [...this.conversationHistory, message];
+        this.scrollToBottom();
+      }
+    });
   }
 
   private dispatchConversations() {

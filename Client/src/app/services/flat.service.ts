@@ -17,6 +17,13 @@ export class FlatService {
         );
     }
 
+    public edit(flat: Flat): Observable<string> {
+        return this.httpClient.put<string>(`${environment.apiUrlTmp}/rest/flats/${flat.id}`, flat).pipe(
+            catchError(error => throwError(() => error))
+        );
+    }
+
+
     public getFlat(id: string): Observable<Flat> {
         return this.httpClient.get<Flat>(`${environment.apiUrlTmp}/rest/flats/${id}`).pipe(
             catchError((error) => throwError(() => error))
@@ -58,6 +65,19 @@ export class FlatService {
 
 
         return this.httpClient.post(`${environment.apiUrlTmp}/rest/flats/${id}/photos`, formData).pipe(
+            catchError(error => throwError(() => error))
+        );
+    }
+
+    public editPhotos(id: string, photos: File[]) {
+        const formData = new FormData();
+
+        photos.forEach(photo => {
+            formData.append('photos', photo);
+        });
+
+
+        return this.httpClient.put(`${environment.apiUrlTmp}/rest/flats/${id}/photos`, formData).pipe(
             catchError(error => throwError(() => error))
         );
     }

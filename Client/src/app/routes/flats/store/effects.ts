@@ -31,8 +31,34 @@ export class FlatEffects {
         () =>
             this.actions$.pipe(
             ofType(FlatActions.addFlatSuccess),
-            map((token) => {
+            map(() => {
                 this.notificationService.success("Flat has been added.");
+            })
+            ),
+        { dispatch: false }
+    );
+
+    editFlat$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(FlatActions.editFlat),
+            mergeMap((action) => {
+                return this.flatService.edit(action.flat).pipe(
+                    map((res) => FlatActions.editFlatSuccess({ id: res })),
+                    catchError((error) => {
+                        return of(FlatActions.editFlatFailure({ error: error.message }));
+                    }
+                    )
+                );
+            })
+        )
+    );
+
+    onEditFlatSuccess$ = createEffect(
+        () =>
+            this.actions$.pipe(
+            ofType(FlatActions.editFlatSuccess),
+            map(() => {
+                this.notificationService.success("Flat has been edited.");
             })
             ),
         { dispatch: false }
@@ -136,6 +162,21 @@ export class FlatEffects {
                     map((res) => FlatActions.getFlatsByOwnerIdSuccess({ flats: res })),
                     catchError((error) => {
                         return of(FlatActions.getFlatsByOwnerIdFailure({ error: error.message }));
+                    }
+                    )
+                );
+            })
+        )
+    );
+
+    editFlatPhotos$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(FlatActions.editFlatPhotos),
+            mergeMap((action) => {
+                return this.flatService.editPhotos(action.id, action.photos).pipe(
+                    map((res) => FlatActions.editFlatPhotosSuccess()),
+                    catchError((error) => {
+                        return of(FlatActions.editFlatPhotosFailure({ error: error.message }));
                     }
                     )
                 );

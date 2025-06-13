@@ -119,3 +119,32 @@ export const deleteFlatFailure = createAction(
     `${prefix} Delete Flat Failure`,
     props<{ error: string }>()
 );
+
+export const editFlat = createAction(
+    `${prefix} Edit Flat`,
+    props<{ flat: Flat }>()
+);
+
+export const editFlatSuccess = createAction(
+    `${prefix} Edit Flat Success`,
+    props<{ id: string }>()
+);
+
+export const editFlatFailure = createAction(
+    `${prefix} Edit Flat Failure`,
+    props<{ error: string }>()
+);
+
+export const editFlatPhotos = createAction(
+    `${prefix} Edit Flat Photos`,
+    props<{ id: string, photos: File[] }>()
+);
+
+export const editFlatPhotosSuccess = createAction(
+    `${prefix} Edit Flat Photos Success`
+);
+
+export const editFlatPhotosFailure = createAction(
+    `${prefix} Edit Flat Failure`,
+    props<{ error: string }>()
+);
