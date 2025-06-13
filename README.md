@@ -1,3 +1,22 @@
+# Uruchomienie aplikacji
+Aby uruchomić aplikację, wykonaj poniższe kroki:
+
+Wpisz komendę w terminalu:
+```bash
+docker compose up --build
+```
+Aby uruchomić clienta, wpisz:
+```bash
+npm install 
+ng serve
+```
+
+## Dokumentacja REST_API (SWAGGER)
+
+```
+http://localhost:8080/swagger-ui.html
+```
+
 ## Tworzenie użytkownika
 ```
 curl -X 'POST' \
@@ -25,13 +44,6 @@ curl -X 'POST' \
 ```
 curl -X GET "http://127.0.0.1:8000/api/v1/users/me" \
 -H "Authorization: Bearer <token>"
-```
-
-
-## Dokumentacja REST_API (SWAGGER)
-
-```
-http://localhost:8080/swagger-ui.html
 ```
 
 
