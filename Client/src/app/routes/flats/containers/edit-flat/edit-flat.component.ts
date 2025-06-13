@@ -5,9 +5,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../../store';
 import { Flat } from '../../../../models/flat';
-import { FlatActions, getFlatSelector } from '../../store';
+import { FlatActions, getFlatPhotosUrlsSelector, getFlatSelector } from '../../store';
 import { Observable, Subscription } from 'rxjs';
 import { Actions, ofType } from '@ngrx/effects';
+import { getFlatPhotos } from '../../store/actions';
+import { environment } from '../../../../../environment';
 
 @Component({
   selector: 'app-edit-flat',
@@ -21,6 +23,8 @@ export class EditFlatComponent implements OnInit, OnDestroy {
   selectedFiles: File[] = [];
   flatId!: string;
   flat$!: Observable<Flat | undefined>;
+  flatPhotosUrls$!: Observable<string[] | undefined>;
+
   private subscription = new Subscription();
 
   constructor(
@@ -48,6 +52,8 @@ export class EditFlatComponent implements OnInit, OnDestroy {
 
     this.selectGetFlat();
     this.subscribeGetFlat();
+    this.selectPhotosUrls();
+    this.subscribePhotosUrls();
     this.subscribeEditFlatSuccess();
   }
 
@@ -55,6 +61,7 @@ export class EditFlatComponent implements OnInit, OnDestroy {
     this.flatId = this.route.snapshot.paramMap.get('id')!;
 
     this.dispatchGetFlat();
+    this.dispatchPhotosUrls();
   }
 
   ngOnDestroy(): void {
@@ -102,4 +109,40 @@ export class EditFlatComponent implements OnInit, OnDestroy {
       }
     })
   }
+
+  private dispatchPhotosUrls() {
+    if(this.flatId) {
+      this.store.dispatch(FlatActions.getFlatPhotos({ id: this.flatId }));
+    }
+  }
+
+  private selectPhotosUrls() {
+    this.flatPhotosUrls$ = this.store.select(getFlatPhotosUrlsSelector)
+  }
+
+  private subscribePhotosUrls() {
+    this.flatPhotosUrls$.subscribe(async (urls) => {
+      if (urls) {
+        const fullUrls = urls.map(url => `${environment.apiUrlTmp}${url}`);
+        const filePromises = fullUrls.map(async (url) => {
+          const nameWithPrefix = url.split('/').pop() ?? 'photo.jpg';
+          const nameParts = nameWithPrefix.split('_');
+          nameParts.shift();
+          const fileName = nameParts.join('_');
+
+          return this.fetchAndConvertToFile(url, fileName);
+        });
+
+        this.selectedFiles = await Promise.all(filePromises);
+        console.log(this.selectedFiles);
+      }
+    })
+  }
+
+  private async fetchAndConvertToFile(url: string, fileName: string): Promise<File> {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return new File([blob], fileName, { type: blob.type });
+  }
+
 }
