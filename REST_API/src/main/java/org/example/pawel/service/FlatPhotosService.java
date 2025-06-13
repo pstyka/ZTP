@@ -57,4 +57,32 @@ public class FlatPhotosService {
                 .map(FlatPhoto::getUrl)
                 .toList();
     }
+
+    public void deletePhotosByFlatId(UUID flatId) {
+        List<FlatPhoto> photos = flatPhotoRepository.findAllByFlatId(flatId);
+        flatPhotoRepository.deleteAll(photos);
+
+        for (FlatPhoto photo : photos) {
+            try {
+                Path filePath = Paths.get(uploadDir, photo.getUrl().replace("/uploads/", ""));
+                Files.deleteIfExists(filePath);
+            } catch (IOException e) {
+                System.err.println("Failed to delete file: " + e.getMessage());
+            }
+        }
+    }
+
+    public void deletePhotoById(UUID photoId) {
+        FlatPhoto photo = flatPhotoRepository.findById(photoId)
+                .orElseThrow(() -> new RuntimeException("Photo not found"));
+
+        flatPhotoRepository.delete(photo);
+
+        try {
+            Path filePath = Paths.get(uploadDir, photo.getUrl().replace("/uploads/", ""));
+            Files.deleteIfExists(filePath);
+        } catch (IOException e) {
+            System.err.println("Failed to delete file: " + e.getMessage());
+        }
+    }
 }

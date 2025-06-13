@@ -39,6 +39,9 @@ public class FlatService {
     @Autowired
     private final FlatPhotoRepository flatPhotoRepository;
 
+    @Autowired
+    private FlatPhotosService flatPhotosService;
+
     public List<FlatDTO> getAllFlats() {
         return flatRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt")).stream()
                 .map(flatDTOMapper::mapToDTO)
@@ -117,6 +120,7 @@ public class FlatService {
     }
 
     public void deleteFlat(UUID id) {
+        flatPhotosService.deletePhotosByFlatId(id);
         flatRepository.deleteById(id);
     }
 
