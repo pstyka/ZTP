@@ -75,6 +75,20 @@ services:
       - app-network
     restart: unless-stopped
 
+  client:
+    build:
+      context: ./Client
+      dockerfile: Dockerfile
+    container_name: client
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./Client:/app
+      - /app/node_modules
+    restart: unless-stopped
+    networks:
+      - app-network
+
 volumes:
   redis_data:
     driver: local
